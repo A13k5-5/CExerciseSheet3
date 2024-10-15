@@ -34,7 +34,7 @@ void drawKochStar(int x1, int y1, int x5, int y5, int depth)
 
 int main(void)
 {
-    int depth = 3;
+    int depth = 10;
     drawKochStar(100, 100, 200, 100, depth);
     drawKochStar(200, 100, 150, 100 - (int)sqrt(100 * 100 - 50 * 50), depth);
     drawKochStar(150, 100 - (int)sqrt(100 * 100 - 50 * 50), 100, 100, depth);
