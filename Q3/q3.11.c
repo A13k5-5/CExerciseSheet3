@@ -21,8 +21,8 @@ void drawPattern(int gridSize, int CanvasHeight, int CanvasWidth)
         for (int j = 0; j < CanvasWidth / gridSize; j++)
         {
             setColour(isBlue ? blue : yellow);
-            int x = j * gridSize - 3 * i * gridSize < 0 ? CanvasWidth + j * gridSize - 3 * i * gridSize : j * gridSize - 3 * i * gridSize;
-            fillRect(x, i * gridSize, x + gridSize, (i + 1) * gridSize);
+            int x = j * gridSize - 3 * i * gridSize < 0 ? CanvasWidth + (j * gridSize - 3 * i * gridSize) % CanvasWidth : j * gridSize - 3 * i * gridSize;
+            fillRect(x, i * gridSize, gridSize, gridSize);
             if (j == colourChange)
             {
                 isBlue = !isBlue;
