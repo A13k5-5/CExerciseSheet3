@@ -56,6 +56,6 @@ int daysBetween(char *date1, char *date2)
 
 int main(void)
 {
-    daysBetween("05/08/2005", "05/08/2005");
+    daysBetween("05/08/2005", "06/08/2005");
     return 0;
 }
