@@ -6,16 +6,30 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
+#include <stdlib.h>
 #include "graphics.h"
 
 void drawPattern(int gridSize, int CanvasHeight, int CanvasWidth)
 {
-    bool isBlue = false;
-    for (int i = 0; i < CanvasWidth; i += gridSize)
+    int colours[] = {3, 1, 1};
+    int curColourId = 1;
+    int colourChange = 2;
+    bool isBlue = true;
+    for (int i = 0; i < CanvasHeight / gridSize; i++)
     {
-        setColour(isBlue ? blue : yellow);
-        isBlue = !isBlue;
-        fillRect(i, 0, i + gridSize, gridSize);
+        for (int j = 0; j < CanvasWidth / gridSize; j++)
+        {
+            setColour(isBlue ? blue : yellow);
+            int x = j * gridSize - 3 * i * gridSize < 0 ? CanvasWidth + j * gridSize - 3 * i * gridSize : j * gridSize - 3 * i * gridSize;
+            fillRect(x, i * gridSize, x + gridSize, (i + 1) * gridSize);
+            if (j == colourChange)
+            {
+                isBlue = !isBlue;
+                colourChange = (colourChange + colours[curColourId]) % (CanvasWidth / gridSize);
+                curColourId = (curColourId + 1) % 3;
+            }
+        }
     }
 }
 
@@ -24,6 +38,6 @@ int main(void)
     int height = 500;
     int width = 500;
     setWindowSize(height, width);
-    drawPattern(10, height, width);
+    drawPattern(25, height, width);
     return 0;
 }
