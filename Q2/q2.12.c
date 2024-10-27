@@ -1,6 +1,9 @@
 // Written by api on 16/10/2024
 // This program draws the three trigonometric functions on a coordinate system
 
+// To compile:gcc q2.12.c graphics.c -lm -o drawTrigFunctions
+// To run: ./drawTrigFunctions | java -jar drawapp-3.0.jar
+
 #include <stdio.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
