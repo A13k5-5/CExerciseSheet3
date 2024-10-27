@@ -1,4 +1,7 @@
 {
     "cmake.sourceDirectory": "C:/Users/pison/onedrive2/OneDrive/UCL/COMP0002/C/Hello World",
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.associations": {
+        "stdio.h": "c"
+    }
 }
