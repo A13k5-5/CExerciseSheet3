@@ -5,13 +5,18 @@
 // To run: ./plusPattern | java -jar drawapp-3.0.jar
 
 #include <stdio.h>
+#include <stdbool.h>
 #include "graphics.h"
 
 void drawPattern(int gridSize, int CanvasHeight, int CanvasWidth)
 {
-    setColour(blue);
-    fillRect(50, 50, 50, 50);
-    drawLine(0, 0, 500, 500);
+    bool isBlue = false;
+    for (int i = 0; i < CanvasWidth; i += gridSize)
+    {
+        setColour(isBlue ? blue : yellow);
+        isBlue = !isBlue;
+        fillRect(i, 0, i + gridSize, gridSize);
+    }
 }
 
 int main(void)
@@ -19,6 +24,6 @@ int main(void)
     int height = 500;
     int width = 500;
     setWindowSize(height, width);
-    drawPattern(50, height, width);
+    drawPattern(10, height, width);
     return 0;
 }
