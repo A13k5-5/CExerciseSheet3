@@ -6,29 +6,11 @@
 #include <math.h>
 #include "graphics.h"
 
-void drawSine(int xMin, int xMax, int domain)
+void drawTrigFunction(double (*trigfunction)(double), int xMin, int xMax, int domain)
 {
     for (int i = xMin; i < xMax; i++)
     {
-        int y = -(int)(sin(i * 2.0 * M_PI / domain) * domain / (2 * M_PI)) + 400;
-        drawLine(i, y, i, y);
-    }
-}
-
-void drawCosine(int xMin, int xMax, int domain)
-{
-    for (int i = xMin; i < xMax; i++)
-    {
-        int y = -(int)(cos(i * 2.0 * M_PI / domain) * domain / (2 * M_PI)) + 400;
-        drawLine(i, y, i, y);
-    }
-}
-
-void drawTan(int xMin, int xMax, int domain)
-{
-    for (int i = xMin; i < xMax; i++)
-    {
-        int y = -(int)(tan(i * 2.0 * M_PI / domain) * domain / (2 * M_PI)) + 400;
+        int y = -(int)(trigfunction(i * 2.0 * M_PI / domain) * domain / (2 * M_PI)) + 400;
         drawLine(i, y, i, y);
     }
 }
@@ -45,8 +27,8 @@ int main(void)
 {
     setWindowSize(800, 800);
     drawCoordAxis();
-    drawSine(0, 800, 800);
-    drawCosine(0, 800, 800);
-    drawTan(0, 800, 800);
+    drawTrigFunction(sin, 0, 800, 800);
+    drawTrigFunction(cos, 0, 800, 800);
+    drawTrigFunction(tan, 0, 800, 800);
     return 0;
 }
