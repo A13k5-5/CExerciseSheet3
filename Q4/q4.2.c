@@ -6,6 +6,7 @@
 
 #include "graphics.h"
 #include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct canvas
 {
@@ -50,21 +51,12 @@ void drawBackground(Canvas canvas)
     drawCheckers(canvas, &isWhite, squareSize);
 }
 
-void drawBall(Ball ball)
-{
-    foreground();
-    clear();
-    setColour(ball.colour);
-    fillArc(ball.x, ball.y, ball.width, ball.width, 0, 360);
-}
-
 void moveBall(Ball *ball, Dir *directions)
 {
     int horizontalSign = directions->right ? 1 : -1;
     int verticalSign = directions->up ? -1 : 1;
     ball->x += horizontalSign * ball->speed;
     ball->y += verticalSign * ball->speed;
-    drawBall(*ball);
     sleep(10);
 }
 
@@ -81,14 +73,59 @@ void checkBallDirection(Ball *ball, Canvas canvas, Dir *directions)
         directions->up = false;
 }
 
-void controlBall(Ball *ball, Canvas canvas)
+Dir *generateDirections(int size)
 {
-    Dir directions = {false, true};
+    Dir *directions = malloc(size * sizeof(Dir));
+    for (int i = 0; i < size; i++)
+    {
+        directions[i].right = true;
+        directions[i].up = false;
+    }
+    return directions;
+}
+
+Ball *generateBalls(int size)
+{
+    Ball *balls = malloc(size * sizeof(Ball));
+    for (int i = 0; i < size; i++)
+    {
+        balls[i].x = i * 50;
+        balls[i].y = i * 50;
+        balls[i].width = 30;
+        balls[i].speed = 3;
+        balls[i].colour = green;
+    }
+
+    return balls;
+}
+
+void drawBalls(Ball *balls, int size)
+{
+    foreground();
+    clear();
+    for (int i = 0; i < size; i++)
+    {
+        setColour(balls[i].colour);
+        fillArc(balls[i].x, balls[i].y, balls[i].width, balls[i].width, 0, 360);
+    }
+    sleep(5);
+}
+
+void ControlBalls(int size, Canvas canvas)
+{
+    Ball *balls = generateBalls(size);
+    Dir *directions = generateDirections(size);
     while (true)
     {
-        checkBallDirection(ball, canvas, &directions);
-        moveBall(ball, &directions);
+        for (int i = 0; i < size; i++)
+        {
+            checkBallDirection(&balls[i], canvas, &directions[i]);
+            moveBall(&balls[i], &directions[i]);
+        }
+        drawBalls(balls, size);
     }
+    free(balls);
+    free(directions);
 }
 
 int main(void)
@@ -97,7 +134,7 @@ int main(void)
     setWindowSize(canvas.width, canvas.height);
     drawBackground(canvas);
 
-    Ball ball = {300, 150, 30, 3, green};
-    controlBall(&ball, canvas);
+    ControlBalls(5, canvas);
+
     return 0;
 }
