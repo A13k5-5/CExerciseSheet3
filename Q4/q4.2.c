@@ -57,7 +57,6 @@ void moveBall(Ball *ball, Dir *directions)
     int verticalSign = directions->up ? -1 : 1;
     ball->x += horizontalSign * ball->speed;
     ball->y += verticalSign * ball->speed;
-    sleep(10);
 }
 
 void checkBallDirection(Ball *ball, Canvas canvas, Dir *directions)
@@ -92,7 +91,7 @@ Ball *generateBalls(int size)
         balls[i].x = i * 50;
         balls[i].y = i * 50;
         balls[i].width = 30;
-        balls[i].speed = 3;
+        balls[i].speed = 1;
         balls[i].colour = green;
     }
 
@@ -108,7 +107,7 @@ void drawBalls(Ball *balls, int size)
         setColour(balls[i].colour);
         fillArc(balls[i].x, balls[i].y, balls[i].width, balls[i].width, 0, 360);
     }
-    sleep(5);
+    sleep(10);
 }
 
 void ControlBalls(int size, Canvas canvas)
