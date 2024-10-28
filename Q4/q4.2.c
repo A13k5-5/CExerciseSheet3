@@ -1,5 +1,5 @@
-// Written by api on 27/10/2024
-// This program animates a bouncing ball with a checkered background
+// Written by api on 27-28/10/2024
+// This program animates bouncing balls with a checkered background
 
 // To compile: gcc q4.2.c graphics.c -o bouncingBall
 // To run: ./bouncingBall | java -jar drawapp-3.0.jar
@@ -94,7 +94,6 @@ Ball *generateBalls(int size)
         balls[i].speed = 1;
         balls[i].colour = green;
     }
-
     return balls;
 }
 
