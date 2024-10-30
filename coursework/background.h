@@ -1,16 +1,11 @@
-typedef struct canvas
-{
-    int width;
-    int height;
-    int squareSize;
-} canvas;
-
+#pragma once
+#include "main.h"
 typedef struct point
 {
     int x;
     int y;
 } point;
 
-void drawGrid(canvas canvas);
-int gridToCoords(canvas canvas, int x);
-int coordsToGrid(canvas canvas, int x);
+int coordsToGrid(map map, int x);
+int gridToCoords(map map, int x);
+void drawBackground(map map);

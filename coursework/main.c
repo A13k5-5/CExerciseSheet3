@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "main.h"
+#include "background.h"
 
 // 'v' - visited, 'o' - not visited, 'm' - marker, 'w' - wall
 
@@ -17,7 +19,21 @@ void printMap(char **map, int width, int height)
     }
 }
 
-char **generateMap(int width, int height)
+void generateWall(char **map, int width, int height)
+{
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            if (i == 0 || i == height - 1 || j == 0 || j == width - 1)
+            {
+                map[i][j] = 'w';
+            }
+        }
+    }
+}
+
+char **generateEmptyGrid(int width, int height)
 {
     char **map = (char **)malloc((height) * sizeof(char *));
     for (int i = 0; i < height; i++)
@@ -35,28 +51,25 @@ char **generateMap(int width, int height)
     return map;
 }
 
-void generateWall(char **map, int width, int height)
+char **generateMap(int width, int height)
 {
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
-            if (i == 0 || i == height - 1 || j == 0 || j == width - 1)
-            {
-                map[i][j] = 'w';
-            }
-        }
-    }
+    char **map = generateEmptyGrid(width, height);
+    generateWall(map, width, height);
+    return map;
 }
 
 int main(void)
 {
     int width = 8;
     int height = 8;
-    char **map = generateMap(width, height);
-    printMap(map, width, height);
-    printf("\n");
-    generateWall(map, width, height);
-    printMap(map, width, height);
+    canvas canvas = {500, 500, 50};
+    map map = {
+        width,
+        height,
+        canvas,
+        generateMap(width, height)};
+    printMap(map.map, map.width, map.height);
+    drawBackground(map);
+    free(map.map);
     return 0;
 }
