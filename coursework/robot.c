@@ -25,11 +25,19 @@ int canMoveForward(robot *robot, map map)
     bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
     return map.map[vertical ? robot->pos.y + sign : robot->pos.y][!vertical ? robot->pos.x + sign : robot->pos.x] != 'w';
 }
+int atMarker(robot *robot, map map)
+{
+    return map.map[robot->pos.y][robot->pos.x] == 'm';
+}
 
 void forward(robot *robot, map map)
 {
     if (!canMoveForward(robot, map))
         return;
+    if (atMarker(robot, map))
+    {
+        printf("I am at marker!");
+    }
     int sign = robot->dir / abs(robot->dir);
     bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
     vertical ? (robot->pos.y += sign) : (robot->pos.x += sign);
@@ -43,7 +51,6 @@ void right(robot *robot)
 {
     robot->dir = (robot->dir - 2) < NORTH ? EAST : (robot->dir - 2);
 }
-int atMarker() {}
 
 void pickUpMarker() {}
 void dropMarker() {}

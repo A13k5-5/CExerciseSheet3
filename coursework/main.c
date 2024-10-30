@@ -74,6 +74,7 @@ int main(void)
     // printMap(map.map, map.width, map.height);
     drawBackground(map);
     drawRobot(&robot, map);
+    right(&robot);
     forward(&robot, map);
     forward(&robot, map);
     forward(&robot, map);
