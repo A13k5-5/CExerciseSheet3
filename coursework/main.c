@@ -55,6 +55,7 @@ char **generateMap(int width, int height)
 {
     char **map = generateEmptyGrid(width, height);
     generateWall(map, width, height);
+    map[1][1] = 'm';
     return map;
 }
 
