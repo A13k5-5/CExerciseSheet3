@@ -1,6 +1,6 @@
 #pragma once
 #include "main.h"
-// Two positive two negative - important for determining where the robot should move
+// Everytime there is a change in direction, either 2 is added or substracted
 enum dirs
 {
     NORTH = -3,
@@ -23,3 +23,5 @@ void drawRobot(robot *robot, map map);
 void forward(robot *robot, map map);
 void left(robot *robot);
 void right(robot *robot);
+int atMarker(robot *robot, map map);
+int canMoveForward(robot *robot, map map);
