@@ -17,6 +17,7 @@ int gridToCoords(canvas canvas, int x)
 
 void drawGrid(canvas canvas)
 {
+    background();
     for (int y = 1; y < coordsToGrid(canvas, canvas.height); y += 1)
     {
         for (int x = 1; x < coordsToGrid(canvas, canvas.width) - 1; x += 1)
@@ -25,11 +26,6 @@ void drawGrid(canvas canvas)
             drawRect(gridToCoords(canvas, x), gridToCoords(canvas, y), canvas.squareSize, canvas.squareSize);
         }
     }
-}
-
-void drawBackground(canvas canvas)
-{
-    drawGrid(canvas);
 }
 
 int main(void)
