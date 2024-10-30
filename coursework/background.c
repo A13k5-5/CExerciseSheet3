@@ -2,28 +2,40 @@
 
 #include "graphics.h"
 #include "background.h"
+#include <stdio.h>
 
-void drawGrid(canvas canvas, int squareSize)
+// This function converts real (x,y) coords into grid coords
+int coordsToGrid(canvas canvas, int x)
 {
-    for (int y = squareSize; y < canvas.height - squareSize; y += squareSize)
+    return x / canvas.squareSize;
+}
+
+int gridToCoords(canvas canvas, int x)
+{
+    return x * canvas.squareSize;
+}
+
+void drawGrid(canvas canvas)
+{
+    for (int y = 1; y < coordsToGrid(canvas, canvas.height); y += 1)
     {
-        for (int x = squareSize; x < canvas.width - squareSize; x += squareSize)
+        for (int x = 1; x < coordsToGrid(canvas, canvas.width) - 1; x += 1)
         {
-            drawRect(x, y, squareSize, squareSize);
+            (y == 1 || y == coordsToGrid(canvas, canvas.height) - 1 || x == 1 || x == coordsToGrid(canvas, canvas.width) - 2) ? setColour(red) : setColour(black);
+            drawRect(gridToCoords(canvas, x), gridToCoords(canvas, y), canvas.squareSize, canvas.squareSize);
         }
     }
 }
 
 void drawBackground(canvas canvas)
 {
-    int squareSize = 50;
-    drawGrid(canvas, squareSize);
+    drawGrid(canvas);
 }
 
 int main(void)
 {
-    canvas canvas = {500, 500};
+    canvas canvas = {500, 500, 50};
     setWindowSize(canvas.width, canvas.height);
-    drawBackground(canvas);
+    drawGrid(canvas);
     return 0;
 }
