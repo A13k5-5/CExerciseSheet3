@@ -8,12 +8,12 @@
 // This function converts real (x,y) coords into grid coords
 int coordsToGrid(map map, int x)
 {
-    return x / map.canvas.squareSize;
+    return (x - map.canvas.offset) / map.canvas.squareSize;
 }
 
 int gridToCoords(map map, int x)
 {
-    return x * map.canvas.squareSize;
+    return x * map.canvas.squareSize + map.canvas.offset;
 }
 
 void drawBackground(map map)
@@ -24,16 +24,16 @@ void drawBackground(map map)
     {
         for (int x = 0; x < map.width; x++)
         {
-            drawRect(gridToCoords(map, x + 1), gridToCoords(map, y + 1), map.canvas.squareSize, map.canvas.squareSize);
+            drawRect(gridToCoords(map, x), gridToCoords(map, y), map.canvas.squareSize, map.canvas.squareSize);
             colour col = map.map[y][x] == 'w' ? red : map.map[y][x] == 'm' ? gray
                                                                            : black;
             setColour(col);
             if (map.map[y][x] != 'o')
             {
-                fillRect(gridToCoords(map, x + 1), gridToCoords(map, y + 1), map.canvas.squareSize, map.canvas.squareSize);
+                fillRect(gridToCoords(map, x), gridToCoords(map, y), map.canvas.squareSize, map.canvas.squareSize);
             }
             setColour(black);
-            drawRect(gridToCoords(map, x + 1), gridToCoords(map, y + 1), map.canvas.squareSize, map.canvas.squareSize);
+            drawRect(gridToCoords(map, x), gridToCoords(map, y), map.canvas.squareSize, map.canvas.squareSize);
         }
     }
 }

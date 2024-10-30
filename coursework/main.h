@@ -4,6 +4,7 @@ typedef struct canvas
     int width;
     int height;
     int squareSize;
+    int offset;
 } canvas;
 typedef struct map
 {

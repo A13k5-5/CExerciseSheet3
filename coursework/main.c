@@ -63,22 +63,20 @@ int main(void)
 {
     int width = 8;
     int height = 8;
-    canvas canvas = {500, 500, 50};
+    canvas canvas = {500, 500, 50, 50};
     map map = {
         width,
         height,
         canvas,
         generateMap(width, height)};
-    point startingPos = {2, 2};
-    robot robot = {startingPos, SOUTH};
-    printMap(map.map, map.width, map.height);
+    point startingPos = {1, 1};
+    robot robot = {startingPos, NORTH};
+    // printMap(map.map, map.width, map.height);
     drawBackground(map);
     drawRobot(&robot, map);
     forward(&robot, map);
     forward(&robot, map);
-    left(&robot);
     forward(&robot, map);
-    right(&robot);
     forward(&robot, map);
 
     free(map.map);

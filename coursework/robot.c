@@ -5,6 +5,7 @@
 #include "graphics.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 void drawRobot(robot *robot, map map)
 {
@@ -18,17 +19,20 @@ void drawRobot(robot *robot, map map)
     sleep(500);
 }
 
-void forward(robot *robot, map map)
+int canMoveForward(robot *robot, map map)
 {
     int sign = robot->dir / abs(robot->dir);
-    if (robot->dir == NORTH || robot->dir == SOUTH)
-    {
-        robot->pos.y += sign;
-    }
-    else
-    {
-        robot->pos.x += sign;
-    }
+    bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
+    return map.map[vertical ? robot->pos.y + sign : robot->pos.y][!vertical ? robot->pos.x + sign : robot->pos.x] != 'w';
+}
+
+void forward(robot *robot, map map)
+{
+    if (!canMoveForward(robot, map))
+        return;
+    int sign = robot->dir / abs(robot->dir);
+    bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
+    vertical ? (robot->pos.y += sign) : (robot->pos.x += sign);
     drawRobot(robot, map);
 }
 void left(robot *robot)
@@ -40,9 +44,7 @@ void right(robot *robot)
     robot->dir = (robot->dir - 2) < NORTH ? EAST : (robot->dir - 2);
 }
 int atMarker() {}
-int canMoveForward(robot *robot, map map)
-{
-}
+
 void pickUpMarker() {}
 void dropMarker() {}
 int markerCount() {}
