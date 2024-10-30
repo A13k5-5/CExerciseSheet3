@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "main.h"
 #include "background.h"
+#include "robot.h"
 
 // 'v' - visited, 'o' - not visited, 'm' - marker, 'w' - wall
 
@@ -40,7 +41,6 @@ char **generateEmptyGrid(int width, int height)
     {
         map[i] = (char *)malloc(width * sizeof(char));
     }
-
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
@@ -69,8 +69,18 @@ int main(void)
         height,
         canvas,
         generateMap(width, height)};
+    point startingPos = {2, 2};
+    robot robot = {startingPos, SOUTH};
     printMap(map.map, map.width, map.height);
     drawBackground(map);
+    drawRobot(&robot, map);
+    forward(&robot, map);
+    forward(&robot, map);
+    left(&robot);
+    forward(&robot, map);
+    right(&robot);
+    forward(&robot, map);
+
     free(map.map);
     return 0;
 }
