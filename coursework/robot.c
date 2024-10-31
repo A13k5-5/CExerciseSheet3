@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-void drawRobot(robot *robot, map map)
+void drawRobot(robot *robot, map *map)
 {
     foreground();
     clear();
@@ -20,19 +20,19 @@ void drawRobot(robot *robot, map map)
     sleep(500);
 }
 
-int canMoveForward(robot *robot, map map)
+int canMoveForward(robot *robot, map *map)
 {
     int sign = robot->dir / abs(robot->dir);
     bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
-    return map.map[vertical ? robot->pos.y + sign : robot->pos.y][!vertical ? robot->pos.x + sign : robot->pos.x] != 'w';
+    return map->map[vertical ? robot->pos.y + sign : robot->pos.y][!vertical ? robot->pos.x + sign : robot->pos.x] != 'w';
 }
 
-int atMarker(robot *robot, map map)
+int atMarker(robot *robot, map *map)
 {
-    return map.map[robot->pos.y][robot->pos.x] == 'm';
+    return map->map[robot->pos.y][robot->pos.x] == 'm';
 }
 
-void forward(robot *robot, map map)
+void forward(robot *robot, map *map)
 {
     if (!canMoveForward(robot, map))
         return;
@@ -50,6 +50,11 @@ void right(robot *robot)
     robot->dir = (robot->dir - 2) < NORTH ? EAST : (robot->dir - 2);
 }
 
-void pickUpMarker() {}
+void pickUpMarker(robot *robot, map *map)
+{
+    if (atMarker(robot, map))
+    {
+        }
+}
 void dropMarker() {}
 int markerCount() {}

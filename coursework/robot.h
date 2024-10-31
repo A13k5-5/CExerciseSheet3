@@ -13,11 +13,12 @@ typedef struct robot
 {
     point pos;
     enum dirs dir;
+    int numMarkersCaried;
 } robot;
 
-void drawRobot(robot *robot, map map);
-void forward(robot *robot, map map);
+void drawRobot(robot *robot, map *map);
+void forward(robot *robot, map *map);
 void left(robot *robot);
 void right(robot *robot);
-int atMarker(robot *robot, map map);
-int canMoveForward(robot *robot, map map);
+int atMarker(robot *robot, map *map);
+int canMoveForward(robot *robot, map *map);

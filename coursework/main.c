@@ -35,7 +35,7 @@ void generateWall(char **map, int width, int height)
     }
 }
 
-char **generateEmptyGrid(int width, int height)
+char **generateEmptyMap(int width, int height)
 {
     char **map = (char **)malloc((height) * sizeof(char *));
     for (int i = 0; i < height; i++)
@@ -54,13 +54,13 @@ char **generateEmptyGrid(int width, int height)
 
 char **generateMap(int width, int height)
 {
-    char **map = generateEmptyGrid(width, height);
+    char **map = generateEmptyMap(width, height);
     generateWall(map, width, height);
     map[4][1] = 'm';
     return map;
 }
 
-void findMarkerNextToWall(robot *robot, map map)
+void findMarkerNextToWall(robot *robot, map *map)
 {
     while (!atMarker(robot, map))
     {
@@ -83,11 +83,11 @@ int main(void)
         canvas,
         generateMap(width, height)};
     point startingPos = {randomNumber(2, map.width - 2), randomNumber(2, map.height - 2)};
-    robot robot = {startingPos, randomDir()};
+    robot robot = {startingPos, randomDir(), 0};
     // printMap(map.map, map.width, map.height);
-    drawBackground(map);
-    drawRobot(&robot, map);
-    findMarkerNextToWall(&robot, map);
+    drawBackground(&map);
+    drawRobot(&robot, &map);
+    findMarkerNextToWall(&robot, &map);
     free(map.map);
     return 0;
 }
