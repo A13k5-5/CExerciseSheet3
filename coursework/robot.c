@@ -17,7 +17,7 @@ void drawRobot(robot *robot, map *map)
     setColour(green);
     fillPolygon(3, x, y);
     setColour(black);
-    sleep(500);
+    sleep(100);
 }
 
 int canMoveForward(robot *robot, map *map)
@@ -54,7 +54,10 @@ void pickUpMarker(robot *robot, map *map)
 {
     if (atMarker(robot, map))
     {
-        }
+        robot->numMarkersCaried++;
+        map->map[robot->pos.y][robot->pos.x] = 'o';
+        drawBackground(map);
+    }
 }
 void dropMarker() {}
 int markerCount() {}

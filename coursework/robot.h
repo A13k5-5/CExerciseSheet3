@@ -22,3 +22,4 @@ void left(robot *robot);
 void right(robot *robot);
 int atMarker(robot *robot, map *map);
 int canMoveForward(robot *robot, map *map);
+void pickUpMarker(robot *robot, map *map);

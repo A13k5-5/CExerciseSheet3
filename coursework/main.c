@@ -62,21 +62,27 @@ char **generateMap(int width, int height)
 
 void findMarkerNextToWall(robot *robot, map *map)
 {
-    while (!atMarker(robot, map))
+    while (1)
     {
-        forward(robot, map);
         if (!canMoveForward(robot, map))
         {
             left(robot);
         }
+        if (atMarker(robot, map))
+        {
+            pickUpMarker(robot, map);
+        }
+        forward(robot, map);
     }
 }
 
 int main(void)
 {
-    int width = 8;
+    int width = 10;
     int height = 8;
-    canvas canvas = {500, 500, 50, 50};
+    int squareSize = 50;
+    int offset = 50;
+    canvas canvas = {width * squareSize + 2 * offset, height * squareSize + 2 * offset, squareSize, offset};
     map map = {
         width,
         height,
