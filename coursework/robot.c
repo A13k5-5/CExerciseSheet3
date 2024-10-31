@@ -32,6 +32,11 @@ int atMarker(robot *robot, map *map)
     return map->map[robot->pos.y][robot->pos.x] == 'm';
 }
 
+int isAtHome(robot *robot, map *map)
+{
+    return map->map[robot->pos.y][robot->pos.x] == 'h';
+}
+
 void forward(robot *robot, map *map)
 {
     if (!canMoveForward(robot, map))
@@ -59,5 +64,13 @@ void pickUpMarker(robot *robot, map *map)
         drawBackground(map);
     }
 }
-void dropMarker() {}
+void dropMarker(robot *robot, map *map)
+{
+    if (robot->numMarkersCaried < 1 || atMarker(robot, map))
+        return;
+    robot->numMarkersCaried--;
+    map->map[robot->pos.y][robot->pos.x] = 'm';
+    drawBackground(map);
+    drawRobot(robot, map);
+}
 int markerCount() {}

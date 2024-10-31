@@ -57,6 +57,7 @@ char **generateMap(int width, int height)
     char **map = generateEmptyMap(width, height);
     generateWall(map, width, height);
     map[4][1] = 'm';
+    map[1][1] = 'h';
     return map;
 }
 
@@ -72,14 +73,19 @@ void findMarkerNextToWall(robot *robot, map *map)
         {
             pickUpMarker(robot, map);
         }
+        if (isAtHome(robot, map) && robot->numMarkersCaried > 0)
+        {
+            dropMarker(robot, map);
+            break;
+        }
         forward(robot, map);
     }
 }
 
 int main(void)
 {
-    int width = 10;
-    int height = 8;
+    int width = randomNumber(5, 15);
+    int height = randomNumber(5, 15);
     int squareSize = 50;
     int offset = 50;
     canvas canvas = {width * squareSize + 2 * offset, height * squareSize + 2 * offset, squareSize, offset};
