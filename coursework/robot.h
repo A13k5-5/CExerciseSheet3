@@ -25,3 +25,4 @@ int canMoveForward(robot *robot, map *map);
 void pickUpMarker(robot *robot, map *map);
 int isAtHome(robot *robot, map *map);
 void dropMarker(robot *robot, map *map);
+int markerCount(robot *robot);

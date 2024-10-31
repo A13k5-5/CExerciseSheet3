@@ -2,12 +2,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "main.h"
 #include "background.h"
 #include "robot.h"
 #include "random.h"
 
-// 'v' - visited, 'o' - not visited, 'm' - marker, 'w' - wall
+// 'v' - visited, 'o' - not visited, 'm' - marker, 'w' - wall, 'h' - home
 
 void printMap(char **map, int width, int height)
 {
@@ -61,6 +62,7 @@ char **generateMap(int width, int height)
     return map;
 }
 
+// Stage 3 function
 void findMarkerNextToWall(robot *robot, map *map)
 {
     while (1)
@@ -82,6 +84,77 @@ void findMarkerNextToWall(robot *robot, map *map)
     }
 }
 
+void findCorner(robot *robot, map *map)
+{
+    while (canMoveForward(robot, map))
+    {
+        forward(robot, map);
+    }
+    right(robot);
+    while (canMoveForward(robot, map))
+    {
+        forward(robot, map);
+    }
+    // turn around
+    right(robot);
+    right(robot);
+}
+
+void moveForwardsUntilHitWall(robot *robot, map *map)
+{
+    while (canMoveForward(robot, map))
+    {
+        if (atMarker(robot, map))
+        {
+            pickUpMarker(robot, map);
+        }
+        if (isAtHome(robot, map) && markerCount(robot) == 1)
+        {
+            dropMarker(robot, map);
+            return;
+        }
+        forward(robot, map);
+    }
+}
+
+void goThroughWholeGrid(robot *robot, map *map, bool turnLeft)
+{
+    while (true)
+    {
+        while (canMoveForward(robot, map))
+        {
+            if (atMarker(robot, map))
+            {
+                pickUpMarker(robot, map);
+            }
+            if (isAtHome(robot, map) && markerCount(robot) == 1)
+            {
+                dropMarker(robot, map);
+                return;
+            }
+            forward(robot, map);
+        }
+        turnLeft ? left(robot) : right(robot);
+        if (canMoveForward(robot, map))
+        {
+            forward(robot, map);
+        }
+        else
+        {
+            turnLeft ? left(robot) : right(robot);
+        }
+        turnLeft ? left(robot) : right(robot);
+        turnLeft = !turnLeft;
+    }
+}
+
+// Stage 4 function
+void findMarkerAnywhere(robot *robot, map *map)
+{
+    findCorner(robot, map);
+    goThroughWholeGrid(robot, map, true);
+}
+
 int main(void)
 {
     int width = randomNumber(5, 15);
@@ -96,10 +169,9 @@ int main(void)
         generateMap(width, height)};
     point startingPos = {randomNumber(2, map.width - 2), randomNumber(2, map.height - 2)};
     robot robot = {startingPos, randomDir(), 0};
-    // printMap(map.map, map.width, map.height);
     drawBackground(&map);
     drawRobot(&robot, &map);
-    findMarkerNextToWall(&robot, &map);
+    findMarkerAnywhere(&robot, &map);
     free(map.map);
     return 0;
 }

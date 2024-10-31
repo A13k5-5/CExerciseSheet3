@@ -17,7 +17,7 @@ void drawRobot(robot *robot, map *map)
     setColour(green);
     fillPolygon(3, x, y);
     setColour(black);
-    sleep(100);
+    sleep(30);
 }
 
 int canMoveForward(robot *robot, map *map)
@@ -73,4 +73,7 @@ void dropMarker(robot *robot, map *map)
     drawBackground(map);
     drawRobot(robot, map);
 }
-int markerCount() {}
+int markerCount(robot *robot)
+{
+    return robot->numMarkersCaried;
+}
