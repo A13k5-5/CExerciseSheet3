@@ -8,11 +8,7 @@ enum dirs
     SOUTH = 1,
     EAST = 3
 };
-typedef struct point
-{
-    int x;
-    int y;
-} point;
+
 typedef struct robot
 {
     point pos;

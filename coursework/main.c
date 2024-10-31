@@ -1,10 +1,11 @@
 // This is the main controller
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "main.h"
 #include "background.h"
 #include "robot.h"
+#include "random.h"
 
 // 'v' - visited, 'o' - not visited, 'm' - marker, 'w' - wall
 
@@ -81,13 +82,12 @@ int main(void)
         height,
         canvas,
         generateMap(width, height)};
-    point startingPos = {5, 6};
-    robot robot = {startingPos, NORTH};
+    point startingPos = {randomNumber(2, map.width - 2), randomNumber(2, map.height - 2)};
+    robot robot = {startingPos, randomDir()};
     // printMap(map.map, map.width, map.height);
     drawBackground(map);
     drawRobot(&robot, map);
     findMarkerNextToWall(&robot, map);
-
     free(map.map);
     return 0;
 }
