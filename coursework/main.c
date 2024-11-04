@@ -7,6 +7,7 @@
 #include "background.h"
 #include "robot.h"
 #include "random.h"
+#include "graphics.h"
 
 // 'o' - nothing, 'm' - marker, 'w' - wall, 'h' - home
 
@@ -180,6 +181,33 @@ void goAroundObstacle(bool turnLeft, robot *robot, map *map)
     }
 }
 
+char **copyMap(map *map)
+{
+    char **mapCopy = generateEmptyMap(map->width, map->height);
+    for (int i = 0; i < map->height; i++)
+    {
+        for (int j = 0; j < map->width; j++)
+        {
+            mapCopy[i][j] = map->map[i][j];
+        }
+    }
+    printMap(mapCopy, map->width, map->height);
+    return mapCopy;
+}
+
+// Let's try recursion and use a visited map
+void movingEverywhere(robot *robot, map *map)
+{
+    char **mapCopy = copyMap(map);
+}
+
+void movingEverywhereRecur(map *map, char **mapCopy, point curPos)
+{
+    if (map->map[curPos.y][curPos.x])
+    {
+        return;
+    }
+}
 int main(void)
 {
     int width = 10;
@@ -196,9 +224,9 @@ int main(void)
     robot robot = {startingPos, EAST, 0};
 
     drawBackground(&map);
-    drawRobot(&robot, &map);
+    // drawRobot(&robot, &map);
     // findMarkerAnywhere(&robot, &map);
-    goAroundObstacle(true, &robot, &map);
+    // goAroundObstacle(true, &robot, &map);
     free(map.map);
     return 0;
 }
