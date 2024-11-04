@@ -36,11 +36,12 @@ void drawRobot(robot *robot, map *map)
     sleep(100);
 }
 
-int canMoveForward(robot *robot, map *map)
+bool canMoveForward(robot *robot, map *map)
 {
     int sign = robot->dir / abs(robot->dir);
     bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
-    return map->map[vertical ? robot->pos.y + sign : robot->pos.y][!vertical ? robot->pos.x + sign : robot->pos.x] != 'w';
+    char nextPos = map->map[vertical ? robot->pos.y + sign : robot->pos.y][!vertical ? robot->pos.x + sign : robot->pos.x];
+    return nextPos != 'w' && nextPos != 'b';
 }
 
 int atMarker(robot *robot, map *map)
