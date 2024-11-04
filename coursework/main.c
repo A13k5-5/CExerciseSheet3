@@ -195,19 +195,34 @@ char **copyMap(map *map)
     return mapCopy;
 }
 
+void movingEverywhereRecur(map *map, char **mapCopy, point curPos)
+{
+    if (mapCopy[curPos.y][curPos.x] != 'o')
+    {
+        return;
+    }
+    mapCopy[curPos.y][curPos.x] = 'v';
+    setColour(green);
+    drawOval(gridToCoords(map, curPos.x), gridToCoords(map, curPos.y), map->canvas.squareSize, map->canvas.squareSize);
+    sleep(150);
+    point north = {curPos.x, curPos.y - 1};
+    point south = {curPos.x, curPos.y + 1};
+    point west = {curPos.x + 1, curPos.y};
+    point east = {curPos.x - 1, curPos.y};
+
+    movingEverywhereRecur(map, mapCopy, north);
+    movingEverywhereRecur(map, mapCopy, south);
+    movingEverywhereRecur(map, mapCopy, west);
+    movingEverywhereRecur(map, mapCopy, east);
+}
+
 // Let's try recursion and use a visited map
 void movingEverywhere(robot *robot, map *map)
 {
     char **mapCopy = copyMap(map);
+    movingEverywhereRecur(map, mapCopy, robot->pos);
 }
 
-void movingEverywhereRecur(map *map, char **mapCopy, point curPos)
-{
-    if (map->map[curPos.y][curPos.x])
-    {
-        return;
-    }
-}
 int main(void)
 {
     int width = 10;
@@ -220,10 +235,12 @@ int main(void)
         height,
         canvas,
         generateMap(width, height)};
-    point startingPos = {1, 6};
+    point startingPos = {2, 6};
     robot robot = {startingPos, EAST, 0};
 
     drawBackground(&map);
+    char **mapCopy = copyMap(&map);
+    movingEverywhereRecur(&map, mapCopy, startingPos);
     // drawRobot(&robot, &map);
     // findMarkerAnywhere(&robot, &map);
     // goAroundObstacle(true, &robot, &map);
