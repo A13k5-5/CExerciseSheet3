@@ -1,5 +1,6 @@
 #pragma once
 #include "main.h"
+#include <stdbool.h>
 // Everytime there is a change in direction, either 2 is added or substracted
 enum dirs
 {
@@ -17,7 +18,7 @@ typedef struct robot
 } robot;
 
 void drawRobot(robot *robot, map *map);
-void forward(robot *robot, map *map);
+bool forward(robot *robot, map *map);
 void left(robot *robot);
 void right(robot *robot);
 int atMarker(robot *robot, map *map);

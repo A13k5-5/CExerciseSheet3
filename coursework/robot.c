@@ -12,12 +12,28 @@ void drawRobot(robot *robot, map *map)
 {
     foreground();
     clear();
+    int sign = robot->dir / abs(robot->dir);
+    bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
+    // NORTH
     int x[] = {gridToCoords(map, robot->pos.x), gridToCoords(map, robot->pos.x + 1), (gridToCoords(map, robot->pos.x) + gridToCoords(map, robot->pos.x + 1)) / 2};
     int y[] = {gridToCoords(map, robot->pos.y + 1), gridToCoords(map, robot->pos.y + 1), gridToCoords(map, robot->pos.y)};
+
+    // SOUTH
+    // int x[] = {gridToCoords(map, robot->pos.x), gridToCoords(map, robot->pos.x + 1), (gridToCoords(map, robot->pos.x) + gridToCoords(map, robot->pos.x + 1)) / 2};
+    // int y[] = {gridToCoords(map, robot->pos.y), gridToCoords(map, robot->pos.y), gridToCoords(map, robot->pos.y + 1)};
+
+    // WEST
+    // int x[] = {gridToCoords(map, robot->pos.x), gridToCoords(map, robot->pos.x + 1), gridToCoords(map, robot->pos.x + 1)};
+    // int y[] = {(gridToCoords(map, robot->pos.y) + gridToCoords(map, robot->pos.y + 1)) / 2, gridToCoords(map, robot->pos.y), gridToCoords(map, robot->pos.y + 1)};
+
+    // EAST
+    // int x[] = {gridToCoords(map, robot->pos.x), gridToCoords(map, robot->pos.x), gridToCoords(map, robot->pos.x + 1)};
+    // int y[] = {gridToCoords(map, robot->pos.y), gridToCoords(map, robot->pos.y + 1), (gridToCoords(map, robot->pos.y) + gridToCoords(map, robot->pos.y + 1)) / 2};
+
     setColour(green);
     fillPolygon(3, x, y);
     setColour(black);
-    sleep(30);
+    sleep(100);
 }
 
 int canMoveForward(robot *robot, map *map)
@@ -37,14 +53,16 @@ int isAtHome(robot *robot, map *map)
     return map->map[robot->pos.y][robot->pos.x] == 'h';
 }
 
-void forward(robot *robot, map *map)
+// return true if it moved, false if it didn't
+bool forward(robot *robot, map *map)
 {
     if (!canMoveForward(robot, map))
-        return;
+        return false;
     int sign = robot->dir / abs(robot->dir);
     bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
     vertical ? (robot->pos.y += sign) : (robot->pos.x += sign);
     drawRobot(robot, map);
+    return true;
 }
 void left(robot *robot)
 {
