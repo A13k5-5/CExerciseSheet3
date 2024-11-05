@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 #include "main.h"
 #include "background.h"
 #include "robot.h"
@@ -191,36 +192,32 @@ char **copyMap(map *map)
             mapCopy[i][j] = map->map[i][j];
         }
     }
-    printMap(mapCopy, map->width, map->height);
     return mapCopy;
 }
 
-void movingEverywhereRecur(map *map, char **mapCopy, point curPos)
+void movingEverywhereRecur(map *map, char **mapCopy, point curPos, robot *robot)
 {
     if (mapCopy[curPos.y][curPos.x] != 'o')
     {
         return;
     }
+    bool isMarker = mapCopy[curPos.y][curPos.x] == 'm';
     mapCopy[curPos.y][curPos.x] = 'v';
-    setColour(green);
-    drawOval(gridToCoords(map, curPos.x), gridToCoords(map, curPos.y), map->canvas.squareSize, map->canvas.squareSize);
+    moveTo(robot, curPos, map);
     sleep(150);
     point north = {curPos.x, curPos.y - 1};
     point south = {curPos.x, curPos.y + 1};
     point west = {curPos.x + 1, curPos.y};
     point east = {curPos.x - 1, curPos.y};
 
-    movingEverywhereRecur(map, mapCopy, north);
-    movingEverywhereRecur(map, mapCopy, south);
-    movingEverywhereRecur(map, mapCopy, west);
-    movingEverywhereRecur(map, mapCopy, east);
-}
-
-// Let's try recursion and use a visited map
-void movingEverywhere(robot *robot, map *map)
-{
-    char **mapCopy = copyMap(map);
-    movingEverywhereRecur(map, mapCopy, robot->pos);
+    movingEverywhereRecur(map, mapCopy, north, robot);
+    moveTo(robot, curPos, map);
+    movingEverywhereRecur(map, mapCopy, south, robot);
+    moveTo(robot, curPos, map);
+    movingEverywhereRecur(map, mapCopy, west, robot);
+    moveTo(robot, curPos, map);
+    movingEverywhereRecur(map, mapCopy, east, robot);
+    moveTo(robot, curPos, map);
 }
 
 int main(void)
@@ -240,7 +237,8 @@ int main(void)
 
     drawBackground(&map);
     char **mapCopy = copyMap(&map);
-    movingEverywhereRecur(&map, mapCopy, startingPos);
+    printMap(mapCopy, width, height);
+    movingEverywhereRecur(&map, mapCopy, startingPos, &robot);
     // drawRobot(&robot, &map);
     // findMarkerAnywhere(&robot, &map);
     // goAroundObstacle(true, &robot, &map);

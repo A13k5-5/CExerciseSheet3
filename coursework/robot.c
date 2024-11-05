@@ -33,7 +33,7 @@ void drawRobot(robot *robot, map *map)
     setColour(green);
     fillPolygon(3, x, y);
     setColour(black);
-    sleep(100);
+    sleep(50);
 }
 
 bool canMoveForward(robot *robot, map *map)
@@ -95,4 +95,14 @@ void dropMarker(robot *robot, map *map)
 int markerCount(robot *robot)
 {
     return robot->numMarkersCaried;
+}
+
+void moveTo(robot *robot, point newPos, map *map)
+{
+    foreground();
+    clear();
+    robot->pos.x = newPos.x;
+    robot->pos.y = newPos.y;
+    drawRobot(robot, map);
+    printf("Cur pos: x: %i y: %i\n", newPos.x, newPos.y);
 }

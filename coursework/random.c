@@ -3,6 +3,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "robot.h"
+#include "graphics.h"
 
 // source: https://stackoverflow.com/questions/822323/how-to-generate-a-random-int-in-c/39475626#39475626
 int randomNumber(int min_num, int max_num)

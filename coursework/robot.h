@@ -27,3 +27,4 @@ void pickUpMarker(robot *robot, map *map);
 int isAtHome(robot *robot, map *map);
 void dropMarker(robot *robot, map *map);
 int markerCount(robot *robot);
+void moveTo(robot *robot, point newPos, map *map);
