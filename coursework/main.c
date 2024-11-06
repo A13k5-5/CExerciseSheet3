@@ -102,8 +102,11 @@ void movingEverywhereRecur(map *map, char **mapCopy, point curPos, robot *robot)
     {
         return;
     }
+    printf("Function call\n");
     mapCopy[curPos.y][curPos.x] = 'v';
     moveTo(robot, curPos, map);
+
+    // The next 5 lines can be a separate function
     point north = {curPos.x, curPos.y - 1};
     point south = {curPos.x, curPos.y + 1};
     point west = {curPos.x + 1, curPos.y};
@@ -134,10 +137,10 @@ int main(void)
 
     drawBackground(&map);
     char **mapCopy = copyMap(&map);
-    printMap(mapCopy, width, height);
-    // movingEverywhereRecur(&map, mapCopy, startingPos, &robot);
-    drawRobot(&robot, &map);
-    findMarkerAnywhere(&robot, &map);
+    // printMap(mapCopy, width, height);
+    movingEverywhereRecur(&map, mapCopy, startingPos, &robot);
+    // drawRobot(&robot, &map);
+    // findMarkerAnywhere(&robot, &map);
     // goAroundObstacle(true, &robot, &map);
     free(map.map);
     return 0;
