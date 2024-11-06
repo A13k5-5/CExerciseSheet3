@@ -102,7 +102,6 @@ void movingEverywhereRecur(map *map, char **mapCopy, point curPos, robot *robot)
     {
         return;
     }
-    printf("Function call\n");
     mapCopy[curPos.y][curPos.x] = 'v';
     moveTo(robot, curPos, map);
 

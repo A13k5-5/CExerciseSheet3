@@ -71,7 +71,7 @@ void drawRobot(robot *robot, map *map)
     }
     fillPolygon(3, x[i], y[i]);
     setColour(black);
-    sleep(1000);
+    sleep(100);
 }
 
 bool canMoveForward(robot *robot, map *map)
@@ -139,30 +139,25 @@ int markerCount(robot *robot)
     return robot->numMarkersCaried;
 }
 
+void turnToDir(robot *robot, enum dirs newDir)
+{
+    while (robot->dir != newDir)
+    {
+        right(robot);
+    }
+}
+
 void moveTo(robot *robot, point newPos, map *map)
 {
     int dx = newPos.x - robot->pos.x;
     int dy = newPos.y - robot->pos.y;
-
-    if (dx != 0)
-    {
-        while (robot->dir != (dx > 0 ? EAST : WEST))
-        {
-            right(robot);
-        }
-    }
-    else if (dy != 0)
-    {
-        while (robot->dir != (dy > 0 ? SOUTH : NORTH))
-        {
-            right(robot);
-        }
-    }
-    else
-    {
+    if (!dx && !dy)
         return;
-    }
-    forward(robot, map);
 
+    enum dirs newDir = dx ? (dx < 0 ? WEST : EAST) : 0;
+    newDir = dy ? (dy < 0 ? NORTH : SOUTH) : newDir;
+    turnToDir(robot, newDir);
+
+    forward(robot, map);
     drawRobot(robot, map);
 }
