@@ -1,5 +1,3 @@
-// This draws the background
-
 #include "graphics.h"
 #include "background.h"
 #include "main.h"
