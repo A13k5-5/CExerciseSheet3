@@ -104,7 +104,6 @@ point *neighbourPoints(point p)
     neighbouringPoints[1] = (point){p.x, p.y + 1}; // South
     neighbouringPoints[2] = (point){p.x + 1, p.y}; // West
     neighbouringPoints[3] = (point){p.x - 1, p.y}; // East
-
     return neighbouringPoints;
 }
 
@@ -133,6 +132,28 @@ void moveTo(robot *robot, point newPos, map *map)
     drawRobot(robot, map);
 }
 
+void getHome(robot *robot, map *map)
+{
+    while (markerCount(robot))
+    {
+        dropMarker(robot, map);
+    }
+    robot->finished = true;
+    exit(0);
+}
+
+void checkPos(robot *robot, map *map, char lookingFor)
+{
+    if (lookingFor == 'm' && atMarker(robot, map))
+    {
+        pickUpMarker(robot, map);
+    }
+    else if (lookingFor == 'h' && isAtHome(robot, map))
+    {
+        getHome(robot, map);
+    }
+}
+
 void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *robot, char lookingFor)
 {
     if (mapCopy[curPos.y][curPos.x] == 'w' || mapCopy[curPos.y][curPos.x] == 'b' || mapCopy[curPos.y][curPos.x] == 'v')
@@ -141,22 +162,10 @@ void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *rob
     }
     mapCopy[curPos.y][curPos.x] = 'v';
     moveTo(robot, curPos, map);
-    if (atMarker(robot, map) && lookingFor == 'm')
-    {
-        pickUpMarker(robot, map);
-    }
-    else if (isAtHome(robot, map) && lookingFor == 'h')
-    {
-        while (markerCount(robot))
-        {
-            dropMarker(robot, map);
-        }
-        robot->finished = true;
-        return;
-    }
+
+    checkPos(robot, map, lookingFor);
 
     point *neighbouringPoints = neighbourPoints(robot->pos);
-
     for (int i = 0; i < 4; i++)
     {
         movingEverywhereRecurAbs(map, mapCopy, neighbouringPoints[i], robot, lookingFor);
@@ -167,8 +176,8 @@ void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *rob
 int main(void)
 {
     srand(time(NULL));
-    int width = 10;
-    int height = 8;
+    int width = randomNumber(8, 14);
+    int height = randomNumber(8, 14);
     int squareSize = 50;
     int offset = 50;
     canvas canvas = {width * squareSize + 2 * offset, height * squareSize + 2 * offset, squareSize, offset};
@@ -182,14 +191,9 @@ int main(void)
 
     drawBackground(&map);
     char **mapCopy = copyMap(&map);
-    // printMap(mapCopy, width, height);
     movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, 'm');
     mapCopy = copyMap(&map);
-    printMap(mapCopy, width, height);
     movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, 'h');
-    // drawRobot(&robot, &map);
-    // findMarkerAnywhere(&robot, &map);
-    // goAroundObstacle(true, &robot, &map);
     free(map.map);
     return 0;
 }

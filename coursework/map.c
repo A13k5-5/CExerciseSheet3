@@ -93,10 +93,8 @@ char **generateMap(int width, int height)
 {
     char **map = generateEmptyMap(width, height);
     generateWall(map, width, height);
-    generateObstacles(map, width, height, 5);
-    generateMarkers(4, map, width, height);
-    // map[1][1] = 'm';
-    // map[4][6] = 'm';
+    generateObstacles(map, width, height, (height + width) / 2);
+    generateMarkers((height + width) / 4, map, width, height);
     map[1][2] = 'h';
     return map;
 }

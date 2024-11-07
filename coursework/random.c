@@ -37,14 +37,14 @@ int *generateRandomNumbers(int size, int min, int max)
     int *arr = (int *)malloc(size * sizeof(int));
     for (int i = 0; i < size; i++)
     {
-        arr[i] = rand() % (max - min + 1) + min;
+        arr[i] = randomNumber(min, max);
     }
     return arr;
 }
 
 point generateRandomPoint(int width, int height)
 {
-    point p = {rand() % (width - 3 + 1) + 1, rand() % (height - 3 + 1) + 1};
+    point p = {randomNumber(1, width - 2), randomNumber(1, height - 2)};
     return p;
 }
 
