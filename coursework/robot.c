@@ -94,7 +94,7 @@ int isAtHome(robot *robot, map *map)
 
 void forward(robot *robot, map *map)
 {
-    if (!canMoveForward(robot, map))
+    if (!canMoveForward(robot, map) || robot->finished)
         return;
     int sign = robot->dir / abs(robot->dir);
     bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
@@ -127,7 +127,7 @@ void dropMarker(robot *robot, map *map)
     if (robot->numMarkersCaried < 1 || atMarker(robot, map))
         return;
     robot->numMarkersCaried--;
-    map->map[robot->pos.y][robot->pos.x] = 'm';
+    // map->map[robot->pos.y][robot->pos.x] = 'm';
     drawBackground(map);
     drawRobot(robot, map);
 }
@@ -135,28 +135,4 @@ void dropMarker(robot *robot, map *map)
 int markerCount(robot *robot)
 {
     return robot->numMarkersCaried;
-}
-
-void turnToDir(robot *robot, enum dirs newDir)
-{
-    while (robot->dir != newDir)
-    {
-        right(robot);
-    }
-}
-
-void moveTo(robot *robot, point newPos, map *map)
-{
-    int dx = newPos.x - robot->pos.x;
-    int dy = newPos.y - robot->pos.y;
-
-    if (!dx && !dy)
-        return;
-
-    enum dirs newDir = dx ? (dx < 0 ? WEST : EAST) : 0;
-    newDir = dy ? (dy < 0 ? NORTH : SOUTH) : newDir;
-    turnToDir(robot, newDir);
-
-    forward(robot, map);
-    drawRobot(robot, map);
 }

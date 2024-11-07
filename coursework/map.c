@@ -50,6 +50,7 @@ char **generateMap(int width, int height)
     char **map = generateEmptyMap(width, height);
     generateWall(map, width, height);
     map[1][1] = 'm';
+    map[4][6] = 'm';
     map[1][2] = 'h';
     map[5][4] = 'b';
     map[6][4] = 'b';

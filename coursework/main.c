@@ -97,25 +97,69 @@ void findMarkerAnywhere(robot *robot, map *map)
 }
 
 // Stage 5 start
-void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *robot)
+point *neighbourPoints(point p)
 {
-    if (mapCopy[curPos.y][curPos.x] != 'o')
+    point *neighbouringPoints = (point *)malloc(4 * sizeof(point));
+    neighbouringPoints[0] = (point){p.x, p.y - 1}; // North
+    neighbouringPoints[1] = (point){p.x, p.y + 1}; // South
+    neighbouringPoints[2] = (point){p.x + 1, p.y}; // West
+    neighbouringPoints[3] = (point){p.x - 1, p.y}; // East
+
+    return neighbouringPoints;
+}
+
+void turnToDir(robot *robot, enum dirs newDir)
+{
+    while (robot->dir != newDir)
+    {
+        right(robot);
+    }
+}
+
+void moveTo(robot *robot, point newPos, map *map)
+{
+    int dx = newPos.x - robot->pos.x;
+    int dy = newPos.y - robot->pos.y;
+
+    if (!dx && !dy)
+        return;
+
+    enum dirs newDir = dx ? (dx < 0 ? WEST : EAST) : 0;
+    newDir = dy ? (dy < 0 ? NORTH : SOUTH) : newDir;
+    turnToDir(robot, newDir);
+
+    forward(robot, map);
+
+    drawRobot(robot, map);
+}
+
+void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *robot, char lookingFor)
+{
+    if (mapCopy[curPos.y][curPos.x] == 'w' || mapCopy[curPos.y][curPos.x] == 'b' || mapCopy[curPos.y][curPos.x] == 'v')
     {
         return;
     }
     mapCopy[curPos.y][curPos.x] = 'v';
     moveTo(robot, curPos, map);
+    if (atMarker(robot, map) && lookingFor == 'm')
+    {
+        pickUpMarker(robot, map);
+    }
+    else if (isAtHome(robot, map) && lookingFor == 'h')
+    {
+        while (markerCount(robot))
+        {
+            dropMarker(robot, map);
+        }
+        robot->finished = true;
+        return;
+    }
 
-    // The next 5 lines can be a separate function
-    point north = {curPos.x, curPos.y - 1};
-    point south = {curPos.x, curPos.y + 1};
-    point west = {curPos.x + 1, curPos.y};
-    point east = {curPos.x - 1, curPos.y};
-    point neighbourPoints[] = {north, south, west, east};
+    point *neighbouringPoints = neighbourPoints(robot->pos);
 
     for (int i = 0; i < 4; i++)
     {
-        movingEverywhereRecurAbs(map, mapCopy, neighbourPoints[i], robot);
+        movingEverywhereRecurAbs(map, mapCopy, neighbouringPoints[i], robot, lookingFor);
         moveTo(robot, curPos, map);
     }
 }
@@ -133,12 +177,15 @@ int main(void)
         canvas,
         generateMap(width, height)};
     point startingPos = {2, 6};
-    robot robot = {startingPos, NORTH, 0};
+    robot robot = {startingPos, NORTH, 0, false};
 
     drawBackground(&map);
     char **mapCopy = copyMap(&map);
     // printMap(mapCopy, width, height);
-    movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot);
+    movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, 'm');
+    mapCopy = copyMap(&map);
+    printMap(mapCopy, width, height);
+    movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, 'h');
     // drawRobot(&robot, &map);
     // findMarkerAnywhere(&robot, &map);
     // goAroundObstacle(true, &robot, &map);
