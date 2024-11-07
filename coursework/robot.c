@@ -1,5 +1,4 @@
 // This file controls the robot
-
 #include "robot.h"
 #include "background.h"
 #include "graphics.h"
@@ -29,7 +28,7 @@ int isAtHome(robot *robot, map *map)
 
 void forward(robot *robot, map *map)
 {
-    if (!canMoveForward(robot, map) || robot->finished)
+    if (!canMoveForward(robot, map))
         return;
     int sign = robot->dir / abs(robot->dir);
     bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
@@ -62,7 +61,6 @@ void dropMarker(robot *robot, map *map)
     if (robot->numMarkersCaried < 1 || atMarker(robot, map))
         return;
     robot->numMarkersCaried--;
-    // map->map[robot->pos.y][robot->pos.x] = 'm';
     drawBackground(map);
     drawRobot(robot, map);
 }

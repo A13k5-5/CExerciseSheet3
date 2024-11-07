@@ -132,14 +132,19 @@ void moveTo(robot *robot, point newPos, map *map)
     drawRobot(robot, map);
 }
 
+// This function will later be used to free all allocated memory
+void end()
+{
+    exit(0);
+}
+
 void getHome(robot *robot, map *map)
 {
     while (markerCount(robot))
     {
         dropMarker(robot, map);
     }
-    robot->finished = true;
-    exit(0);
+    end();
 }
 
 void checkPos(robot *robot, map *map, char lookingFor)
@@ -187,7 +192,7 @@ int main(void)
         canvas,
         generateMap(width, height)};
     point startingPos = randomEmptyPointOnMap(map.map, width, height);
-    robot robot = {startingPos, randomDir(), 0, false};
+    robot robot = {startingPos, randomDir(), 0};
 
     drawBackground(&map);
     char **mapCopy = copyMap(&map);

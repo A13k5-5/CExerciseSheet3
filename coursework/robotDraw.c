@@ -69,7 +69,6 @@ void drawRobot(robot *robot, map *map)
 {
     foreground();
     clear();
-
     shapeCoords coords = getShapeCoords(robot, map);
     setColour(green);
     fillPolygon(3, coords.x, coords.y);

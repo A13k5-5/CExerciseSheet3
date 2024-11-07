@@ -15,7 +15,6 @@ typedef struct robot
     point pos;
     enum dirs dir;
     int numMarkersCaried;
-    bool finished;
 } robot;
 
 void drawRobot(robot *robot, map *map);

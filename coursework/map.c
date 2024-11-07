@@ -78,15 +78,21 @@ void generateMarkers(int howMany, char **map, int width, int height)
     for (int i = 0; i < howMany; i++)
     {
         point p = generateRandomPoint(width, height);
-        // if (map[p.y][p.x] != 'o')
-        // {
-        //     i--;
-        // }
-        // else
+        if (map[p.y][p.x] != 'o')
+        {
+            i--;
+        }
+        else
         {
             map[p.y][p.x] = 'm';
         }
     }
+}
+
+void setHome(char **map, int width, int height)
+{
+    point p = generateRandomPoint(width, height);
+    map[p.y][p.x] = 'h';
 }
 
 char **generateMap(int width, int height)
@@ -95,7 +101,7 @@ char **generateMap(int width, int height)
     generateWall(map, width, height);
     generateObstacles(map, width, height, (height + width) / 2);
     generateMarkers((height + width) / 4, map, width, height);
-    map[1][2] = 'h';
+    setHome(map, width, height);
     return map;
 }
 
