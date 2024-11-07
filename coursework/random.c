@@ -48,6 +48,16 @@ point generateRandomPoint(int width, int height)
     return p;
 }
 
+point *generateRandomPoints(int width, int height, int howMany)
+{
+    point *points = malloc(howMany * sizeof(point));
+    for (int i = 0; i < howMany; i++)
+    {
+        points[i] = generateRandomPoint(width, height);
+    }
+    return points;
+}
+
 point randomEmptyPointOnMap(char **map, int width, int height)
 {
     bool isEmpty = false;

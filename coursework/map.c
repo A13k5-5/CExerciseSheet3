@@ -59,16 +59,17 @@ void generateWall(char **map, int width, int height)
 
 void generateObstacles(char **map, int width, int height, int howMany)
 {
-    int *obsX = generateRandomNumbers(howMany, 1, width - 2);
-    int *obsY = generateRandomNumbers(howMany, 1, height - 2);
+    point *points = generateRandomPoints(width, height, howMany);
     int *obsLengths = generateRandomNumbers(howMany, 1, 4);
+    bool horizontal = false;
     for (int i = 0; i < howMany; i++)
     {
+        horizontal = randomNumber(0, 1);
         for (int j = 0; j < obsLengths[i]; j++)
         {
-            if (obsX[i] + j >= width - 2)
+            if ((points[i].x + j >= width - 2 && horizontal) || (points[i].y + j >= height - 2 && !horizontal))
                 break;
-            map[obsY[i]][obsX[i] + j] = 'b';
+            map[points[i].y + (horizontal ? 0 : j)][points[i].x + (horizontal ? j : 0)] = 'b';
         }
     }
 }
@@ -77,21 +78,14 @@ void generateMarkers(int howMany, char **map, int width, int height)
 {
     for (int i = 0; i < howMany; i++)
     {
-        point p = generateRandomPoint(width, height);
-        if (map[p.y][p.x] != 'o')
-        {
-            i--;
-        }
-        else
-        {
-            map[p.y][p.x] = 'm';
-        }
+        point p = randomEmptyPointOnMap(map, width, height);
+        map[p.y][p.x] = 'm';
     }
 }
 
 void setHome(char **map, int width, int height)
 {
-    point p = generateRandomPoint(width, height);
+    point p = randomEmptyPointOnMap(map, width, height);
     map[p.y][p.x] = 'h';
 }
 
@@ -99,9 +93,9 @@ char **generateMap(int width, int height)
 {
     char **map = generateEmptyMap(width, height);
     generateWall(map, width, height);
-    generateObstacles(map, width, height, (height + width) / 2);
-    generateMarkers((height + width) / 4, map, width, height);
     setHome(map, width, height);
+    generateMarkers((height + width) / 4, map, width, height);
+    generateObstacles(map, width, height, (height + width) / 4);
     return map;
 }
 

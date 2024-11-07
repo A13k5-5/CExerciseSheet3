@@ -20,3 +20,4 @@ typedef struct map
 } map;
 
 void printMap(char **map, int width, int height);
+point *neighbourPoints(point p);

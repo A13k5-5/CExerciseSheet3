@@ -126,9 +126,7 @@ void moveTo(robot *robot, point newPos, map *map)
     enum dirs newDir = dx ? (dx < 0 ? WEST : EAST) : 0;
     newDir = dy ? (dy < 0 ? NORTH : SOUTH) : newDir;
     turnToDir(robot, newDir);
-
     forward(robot, map);
-
     drawRobot(robot, map);
 }
 
@@ -167,7 +165,6 @@ void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *rob
     }
     mapCopy[curPos.y][curPos.x] = 'v';
     moveTo(robot, curPos, map);
-
     checkPos(robot, map, lookingFor);
 
     point *neighbouringPoints = neighbourPoints(robot->pos);
