@@ -92,16 +92,14 @@ int isAtHome(robot *robot, map *map)
     return map->map[robot->pos.y][robot->pos.x] == 'h';
 }
 
-// return true if it moved, false if it didn't
-bool forward(robot *robot, map *map)
+void forward(robot *robot, map *map)
 {
     if (!canMoveForward(robot, map))
-        return false;
+        return;
     int sign = robot->dir / abs(robot->dir);
     bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
     vertical ? (robot->pos.y += sign) : (robot->pos.x += sign);
     drawRobot(robot, map);
-    return true;
 }
 
 void left(robot *robot)
@@ -151,6 +149,7 @@ void moveTo(robot *robot, point newPos, map *map)
 {
     int dx = newPos.x - robot->pos.x;
     int dy = newPos.y - robot->pos.y;
+
     if (!dx && !dy)
         return;
 
