@@ -18,6 +18,7 @@ void drawGridSquares(map *map, int x, int y)
 {
     drawRect(gridToCoords(map, x), gridToCoords(map, y), map->canvas.squareSize, map->canvas.squareSize);
     colour col = map->map[y][x] == 'w' ? red : map->map[y][x] == 'm' ? gray
+                                           : map->map[y][x] == 'h'   ? blue
                                                                      : black;
     setColour(col);
     if (map->map[y][x] != 'o')
