@@ -120,88 +120,6 @@ void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *rob
     }
 }
 
-// Recursion attempt 2
-void turnAround(robot *robot)
-{
-    left(robot);
-    left(robot);
-}
-
-void goForward(robot *robot, map *map)
-{
-    forward(robot, map);
-}
-
-void goBack(robot *robot, map *map)
-{
-    printf("Going back\n");
-    turnAround(robot);
-    forward(robot, map);
-    turnAround(robot);
-}
-
-void goLeft(robot *robot, map *map)
-{
-    printf("Going left\n");
-    left(robot);
-    forward(robot, map);
-    right(robot);
-}
-
-void goRight(robot *robot, map *map)
-{
-    printf("Going right\n");
-    right(robot);
-    forward(robot, map);
-    left(robot);
-}
-
-bool move(robot *robot, map *map, int i)
-{
-    if (i == 0)
-    {
-        return goForward(robot, map);
-    }
-    else if (i == 1)
-    {
-        return goBack(robot, map);
-    }
-    else if (i == 2)
-    {
-        return goLeft(robot, map);
-    }
-    else if (i == 3)
-    {
-        return goRight(robot, map);
-    }
-    return NULL;
-}
-
-void movingEverywhereRecurRel(map *map, robot *robot, char **mapCopy, point newPos, int i)
-{
-    if (mapCopy[newPos.y][newPos.x] != 'o')
-    {
-        return;
-    }
-
-    move(robot, map, i);
-    mapCopy[robot->pos.y][robot->pos.x] = 'v';
-
-    point north = {curPos.x, curPos.y - 1};
-    point south = {curPos.x, curPos.y + 1};
-    point west = {curPos.x + 1, curPos.y};
-    point east = {curPos.x - 1, curPos.y};
-
-    movingEverywhereRecurRel(map, robot, mapCopy, 0);
-    move(robot, map, 1);
-    movingEverywhereRecurRel(map, robot, mapCopy, 1);
-    move(robot, map, 1);
-    movingEverywhereRecurRel(map, robot, mapCopy, 2);
-    move(robot, map, 3);
-    movingEverywhereRecurRel(map, robot, mapCopy, 3);
-    move(robot, map, 2);
-}
-
 int main(void)
 {
     int width = 10;
@@ -220,8 +138,7 @@ int main(void)
     drawBackground(&map);
     char **mapCopy = copyMap(&map);
     // printMap(mapCopy, width, height);
-    // movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot);
-    movingEverywhereRecurRel(&map, &robot, mapCopy, 0);
+    movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot);
     // drawRobot(&robot, &map);
     // findMarkerAnywhere(&robot, &map);
     // goAroundObstacle(true, &robot, &map);
