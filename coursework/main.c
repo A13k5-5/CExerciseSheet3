@@ -166,6 +166,7 @@ void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *rob
 
 int main(void)
 {
+    srand(time(NULL));
     int width = 10;
     int height = 8;
     int squareSize = 50;
