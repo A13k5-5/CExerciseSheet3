@@ -177,8 +177,8 @@ int main(void)
         height,
         canvas,
         generateMap(width, height)};
-    point startingPos = {2, 6};
-    robot robot = {startingPos, NORTH, 0, false};
+    point startingPos = randomEmptyPointOnMap(map.map, width, height);
+    robot robot = {startingPos, randomDir(), 0, false};
 
     drawBackground(&map);
     char **mapCopy = copyMap(&map);

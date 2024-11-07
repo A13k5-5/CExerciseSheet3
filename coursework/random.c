@@ -42,13 +42,23 @@ int *generateRandomNumbers(int size, int min, int max)
     return arr;
 }
 
-void printPoint(point p)
-{
-    printf("x: %i y: %i\n", p.x, p.y);
-}
-
 point generateRandomPoint(int width, int height)
 {
     point p = {rand() % (width - 3 + 1) + 1, rand() % (height - 3 + 1) + 1};
+    return p;
+}
+
+point randomEmptyPointOnMap(char **map, int width, int height)
+{
+    bool isEmpty = false;
+    point p;
+    while (!isEmpty)
+    {
+        p = generateRandomPoint(width, height);
+        if (map[p.y][p.x] == 'o')
+        {
+            isEmpty = true;
+        }
+    }
     return p;
 }
