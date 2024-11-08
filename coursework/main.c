@@ -97,15 +97,6 @@ void findMarkerAnywhere(robot *robot, map *map)
 }
 
 // Stage 5 start
-point *neighbourPoints(point p)
-{
-    point *neighbouringPoints = (point *)malloc(4 * sizeof(point));
-    neighbouringPoints[0] = (point){p.x, p.y - 1}; // North
-    neighbouringPoints[1] = (point){p.x, p.y + 1}; // South
-    neighbouringPoints[2] = (point){p.x + 1, p.y}; // West
-    neighbouringPoints[3] = (point){p.x - 1, p.y}; // East
-    return neighbouringPoints;
-}
 
 void turnToDir(robot *robot, enum dirs newDir)
 {
@@ -188,13 +179,13 @@ int main(void)
         height,
         canvas,
         generateMap(width, height)};
-    point startingPos = randomEmptyPointOnMap(map.map, width, height);
+    point startingPos = randomEmptyPointOnMap(map.map, 'o', width, height);
     robot robot = {startingPos, randomDir(), 0};
 
     drawBackground(&map);
-    char **mapCopy = copyMap(&map);
+    char **mapCopy = copyMap(map.map, map.width, map.height);
     movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, 'm');
-    mapCopy = copyMap(&map);
+    mapCopy = copyMap(map.map, map.width, map.height);
     movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, 'h');
     free(map.map);
     return 0;

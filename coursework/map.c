@@ -57,6 +57,30 @@ void generateWall(char **map, int width, int height)
     }
 }
 
+void resetVisited(char **map, int height, int width)
+{
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            if (map[i][j] == 'v')
+            {
+                map[i][j] = 'o';
+            }
+        }
+    }
+}
+
+point *neighbourPoints(point p)
+{
+    point *neighbouringPoints = (point *)malloc(4 * sizeof(point));
+    neighbouringPoints[0] = (point){p.x, p.y - 1}; // North
+    neighbouringPoints[1] = (point){p.x, p.y + 1}; // South
+    neighbouringPoints[2] = (point){p.x + 1, p.y}; // West
+    neighbouringPoints[3] = (point){p.x - 1, p.y}; // East
+    return neighbouringPoints;
+}
+
 void generateObstacles(char **map, int width, int height, int howMany)
 {
     point *points = generateRandomPoints(width, height, howMany);
@@ -78,36 +102,76 @@ void generateMarkers(int howMany, char **map, int width, int height)
 {
     for (int i = 0; i < howMany; i++)
     {
-        point p = randomEmptyPointOnMap(map, width, height);
+        point p = randomEmptyPointOnMap(map, 'v', width, height);
         map[p.y][p.x] = 'm';
     }
 }
 
-void setHome(char **map, int width, int height)
+char **copyMap(char **map, int width, int height)
 {
-    point p = randomEmptyPointOnMap(map, width, height);
-    map[p.y][p.x] = 'h';
+    char **mapCopy = generateEmptyMap(width, height);
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            mapCopy[i][j] = map[i][j];
+        }
+    }
+    return mapCopy;
+}
+
+void dfs(char **mapCopy, int *availableSpots, point curPos)
+{
+    if (mapCopy[curPos.y][curPos.x] != 'o')
+    {
+        return;
+    }
+    mapCopy[curPos.y][curPos.x] = 'v';
+    (*availableSpots)++;
+
+    point *neighbouringPoints = neighbourPoints(curPos);
+    for (int i = 0; i < 4; i++)
+    {
+        dfs(mapCopy, availableSpots, neighbouringPoints[i]);
+    }
+}
+
+point findSuitableHome(char ***map, int width, int height, int *availableSpots)
+{
+    point p;
+    char **mapCopy;
+    int minEmptySquares = 5;
+    while (*availableSpots < minEmptySquares)
+    {
+        *availableSpots = 0;
+        p = randomEmptyPointOnMap(*map, 'o', width, height);
+        mapCopy = copyMap(*map, width, height);
+        dfs(mapCopy, availableSpots, p);
+        if (*availableSpots >= minEmptySquares)
+        {
+            *map = copyMap(mapCopy, width, height);
+        }
+    }
+    return p;
+}
+
+point setHome(char ***map, int width, int height, int *availableSpots)
+{
+    point home = findSuitableHome(map, width, height, availableSpots);
+    (*map)[home.y][home.x] = 'h';
+    (*availableSpots)--;
+    return home;
 }
 
 char **generateMap(int width, int height)
 {
     char **map = generateEmptyMap(width, height);
     generateWall(map, width, height);
-    setHome(map, width, height);
-    generateMarkers((height + width) / 4, map, width, height);
     generateObstacles(map, width, height, (height + width) / 4);
+    int availableSpots = 0;
+    point home = setHome(&map, width, height, &availableSpots);
+    generateMarkers((height + width) / 4, map, width, height);
+    resetVisited(map, height, width);
+    printMap(map, width, height);
     return map;
-}
-
-char **copyMap(map *map)
-{
-    char **mapCopy = generateEmptyMap(map->width, map->height);
-    for (int i = 0; i < map->height; i++)
-    {
-        for (int j = 0; j < map->width; j++)
-        {
-            mapCopy[i][j] = map->map[i][j];
-        }
-    }
-    return mapCopy;
 }

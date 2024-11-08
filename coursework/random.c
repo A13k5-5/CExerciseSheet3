@@ -58,14 +58,14 @@ point *generateRandomPoints(int width, int height, int howMany)
     return points;
 }
 
-point randomEmptyPointOnMap(char **map, int width, int height)
+point randomEmptyPointOnMap(char **map, char empty, int width, int height)
 {
     bool isEmpty = false;
     point p;
     while (!isEmpty)
     {
         p = generateRandomPoint(width, height);
-        if (map[p.y][p.x] == 'o')
+        if (map[p.y][p.x] == empty)
         {
             isEmpty = true;
         }
