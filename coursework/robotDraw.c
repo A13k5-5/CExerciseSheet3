@@ -21,7 +21,7 @@ double convertDirToAngle(enum dirs dir)
     }
 }
 
-point squareCenter(robot *robot, map *map)
+point squareCentre(robot *robot, map *map)
 {
     point centre = {gridToCoords(map, robot->pos.x) + map->canvas.squareSize / 2, gridToCoords(map, robot->pos.y) + map->canvas.squareSize / 2};
     return centre;
@@ -53,7 +53,7 @@ void rotateShapeCoords(shapeCoords *coords, point center, double angle)
 
 shapeCoords getShapeCoords(robot *robot, map *map)
 {
-    point centre = squareCenter(robot, map);
+    point centre = squareCentre(robot, map);
     shapeCoords finalCoords = getNorthCoords(robot, map, centre);
     rotateShapeCoords(&finalCoords, centre, convertDirToAngle(robot->dir));
     return finalCoords;
