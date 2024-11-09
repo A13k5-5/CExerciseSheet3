@@ -22,6 +22,9 @@ void turnToDir(robot *robot, enum dirs newDir)
 
 void moveTo(robot *robot, point newPos, map *map)
 {
+    if (robot->isFinished)
+        return;
+
     int dx = newPos.x - robot->pos.x;
     int dy = newPos.y - robot->pos.y;
 
