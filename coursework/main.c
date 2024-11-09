@@ -11,8 +11,6 @@
 #include "graphics.h"
 #include "map.h"
 
-// 'o' - nothing, 'm' - marker, 'w' - wall, 'h' - home, 'b' - obstacle
-
 // Stage 5 start
 void turnToDir(robot *robot, enum dirs newDir)
 {
@@ -54,16 +52,16 @@ void getHome(robot *robot, map *map)
 
 void setVisited(char **mapCopy, point visitedPoint)
 {
-    mapCopy[visitedPoint.y][visitedPoint.x] = 'v';
+    mapCopy[visitedPoint.y][visitedPoint.x] = VISITED;
 }
 
 void checkPos(robot *robot, map *map, char lookingFor)
 {
-    if (lookingFor == 'm' && atMarker(robot, map))
+    if (lookingFor == MARKER && atMarker(robot, map))
     {
         pickUpMarker(robot, map);
     }
-    else if (lookingFor == 'h' && isAtHome(robot, map))
+    else if (lookingFor == HOME && isAtHome(robot, map))
     {
         getHome(robot, map);
     }
@@ -71,7 +69,7 @@ void checkPos(robot *robot, map *map, char lookingFor)
 
 void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *robot, char lookingFor)
 {
-    if (mapCopy[curPos.y][curPos.x] == 'w' || mapCopy[curPos.y][curPos.x] == 'b' || mapCopy[curPos.y][curPos.x] == 'v')
+    if (mapCopy[curPos.y][curPos.x] == WALL || mapCopy[curPos.y][curPos.x] == OBSTACLE || mapCopy[curPos.y][curPos.x] == VISITED)
     {
         return;
     }
@@ -101,14 +99,17 @@ int main(void)
         canvas,
         generateMap(width, height)};
     // Starting position can only be a position that can access home
-    point startingPos = randomEmptyPointOnMap(map.map, 'v', width, height);
+    point startingPos = randomEmptyPointOnMap(map.map, VISITED, width, height);
     resetVisited(map.map, height, width);
     robot robot = {startingPos, randomDir(), 0};
 
     drawBackground(&map);
     char **mapCopy = copyMap(map.map, map.width, map.height);
-    movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, 'm');
+    movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, MARKER);
+    freeMap(mapCopy, width, height);
     mapCopy = copyMap(map.map, map.width, map.height);
-    movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, 'h');
+    movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, HOME);
+    freeMap(mapCopy, width, height);
+    freeMap(map.map, width, height);
     return 0;
 }

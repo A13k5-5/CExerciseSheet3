@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "main.h"
+#include "map.h"
 #include "random.h"
 
 void printMap(char **map, int width, int height)
@@ -37,10 +38,19 @@ char **generateEmptyMap(int width, int height)
     {
         for (int j = 0; j < width; j++)
         {
-            map[i][j] = 'o';
+            map[i][j] = EMPTY;
         }
     }
     return map;
+}
+
+void freeMap(char **map, int width, int height)
+{
+    for (int i = 0; i < height; i++)
+    {
+        free(map[i]);
+    }
+    free(map);
 }
 
 void generateIrregularArena(char **map, int width, int height, point curPos, int depth)
@@ -49,7 +59,7 @@ void generateIrregularArena(char **map, int width, int height, point curPos, int
     {
         return;
     }
-    map[curPos.y][curPos.x] = 'w';
+    map[curPos.y][curPos.x] = WALL;
 
     point *neighbouringPoints = neighbourPoints(curPos);
 
@@ -71,7 +81,7 @@ void generateEdgeWall(char **map, int width, int height)
         {
             if (i == 0 || i == height - 1 || j == 0 || j == width - 1)
             {
-                map[i][j] = 'w';
+                map[i][j] = WALL;
             }
         }
     }
@@ -93,9 +103,9 @@ void resetVisited(char **map, int height, int width)
     {
         for (int j = 0; j < width; j++)
         {
-            if (map[i][j] == 'v')
+            if (map[i][j] == VISITED)
             {
-                map[i][j] = 'o';
+                map[i][j] = EMPTY;
             }
         }
     }
@@ -108,14 +118,14 @@ void generateObstacles(char **map, int width, int height, int howMany)
     int obsLength;
     for (int i = 0; i < howMany; i++)
     {
-        p = randomEmptyPointOnMap(map, 'o', width, height);
+        p = randomEmptyPointOnMap(map, EMPTY, width, height);
         obsLength = randomNumber(1, 4);
         horizontal = randomNumber(0, 1);
         for (int j = 0; j < obsLength; j++)
         {
             if ((p.x + j >= width - 2 && horizontal) || (p.y + j >= height - 2 && !horizontal))
                 break;
-            map[p.y + (horizontal ? 0 : j)][p.x + (horizontal ? j : 0)] = 'b';
+            map[p.y + (horizontal ? 0 : j)][p.x + (horizontal ? j : 0)] = OBSTACLE;
         }
     }
 }
@@ -124,8 +134,8 @@ void generateMarkers(int howMany, char **map, int width, int height)
 {
     for (int i = 0; i < howMany; i++)
     {
-        point p = randomEmptyPointOnMap(map, 'v', width, height);
-        map[p.y][p.x] = 'm';
+        point p = randomEmptyPointOnMap(map, VISITED, width, height);
+        map[p.y][p.x] = MARKER;
     }
 }
 
@@ -144,11 +154,11 @@ char **copyMap(char **map, int width, int height)
 
 void pointsAccessibleFromPoint(char **mapCopy, int *availableSpots, point curPos)
 {
-    if (mapCopy[curPos.y][curPos.x] != 'o')
+    if (mapCopy[curPos.y][curPos.x] != EMPTY)
     {
         return;
     }
-    mapCopy[curPos.y][curPos.x] = 'v';
+    mapCopy[curPos.y][curPos.x] = VISITED;
     (*availableSpots)++;
 
     point *neighbouringPoints = neighbourPoints(curPos);
@@ -167,13 +177,16 @@ point findSuitableHome(char ***map, int width, int height)
     while (availableSpots < minEmptySquares)
     {
         availableSpots = 0;
-        p = randomEmptyPointOnMap(*map, 'o', width, height);
+        p = randomEmptyPointOnMap(*map, EMPTY, width, height);
         mapCopy = copyMap(*map, width, height);
+
         pointsAccessibleFromPoint(mapCopy, &availableSpots, p);
         if (availableSpots >= minEmptySquares)
         {
+            freeMap(*map, width, height);
             *map = copyMap(mapCopy, width, height);
         }
+        freeMap(mapCopy, width, height);
     }
     return p;
 }
@@ -181,7 +194,7 @@ point findSuitableHome(char ***map, int width, int height)
 void setHome(char ***map, int width, int height)
 {
     point home = findSuitableHome(map, width, height);
-    (*map)[home.y][home.x] = 'h';
+    (*map)[home.y][home.x] = HOME;
 }
 
 char **generateMap(int width, int height)

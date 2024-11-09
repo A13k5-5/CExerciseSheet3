@@ -1,6 +1,7 @@
 #include "graphics.h"
 #include "background.h"
 #include "main.h"
+#include "map.h"
 #include <stdio.h>
 
 int coordsToGrid(map *map, int x)
@@ -16,11 +17,11 @@ int gridToCoords(map *map, int x)
 void drawGridSquares(map *map, int x, int y)
 {
     drawRect(gridToCoords(map, x), gridToCoords(map, y), map->canvas.squareSize, map->canvas.squareSize);
-    colour col = map->map[y][x] == 'w' ? red : map->map[y][x] == 'm' ? gray
-                                           : map->map[y][x] == 'h'   ? blue
-                                                                     : black;
+    colour col = map->map[y][x] == WALL ? red : map->map[y][x] == MARKER ? gray
+                                            : map->map[y][x] == HOME     ? blue
+                                                                         : black;
     setColour(col);
-    if (map->map[y][x] != 'o')
+    if (map->map[y][x] != EMPTY)
     {
         fillRect(gridToCoords(map, x), gridToCoords(map, y), map->canvas.squareSize, map->canvas.squareSize);
     }
