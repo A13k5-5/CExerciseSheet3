@@ -25,6 +25,16 @@ void printArr(int *arr, int size)
     printf("\n");
 }
 
+point *neighbourPoints(point p)
+{
+    point *neighbouringPoints = (point *)malloc(4 * sizeof(point));
+    neighbouringPoints[0] = (point){p.x, p.y - 1}; // North
+    neighbouringPoints[1] = (point){p.x, p.y + 1}; // South
+    neighbouringPoints[2] = (point){p.x + 1, p.y}; // West
+    neighbouringPoints[3] = (point){p.x - 1, p.y}; // East
+    return neighbouringPoints;
+}
+
 char **generateEmptyMap(int width, int height)
 {
     char **map = (char **)malloc((height) * sizeof(char *));
@@ -42,6 +52,25 @@ char **generateEmptyMap(int width, int height)
     return map;
 }
 
+void generateIrregularArena(char **map, int width, int height, point curPos, int depth)
+{
+    if (curPos.x < 0 || curPos.x >= width - 1 || curPos.y < 0 || curPos.y >= height - 1)
+    {
+        return;
+    }
+    map[curPos.y][curPos.x] = 'w';
+
+    point *directions = neighbourPoints(curPos);
+
+    for (int i = 0; i < 4; i++)
+    {
+        if ((randomNumber(0, 2) == 0 && depth < 8) || !depth)
+        {
+            generateIrregularArena(map, width, height, directions[i], depth + 1);
+        }
+    }
+}
+
 // generates wall around edges
 void generateWall(char **map, int width, int height)
 {
@@ -55,6 +84,10 @@ void generateWall(char **map, int width, int height)
             }
         }
     }
+    point start = {1, 1};
+    generateIrregularArena(map, width, height, start, 0);
+    point start2 = {width - 2, 1};
+    generateIrregularArena(map, width, height, start2, 0);
 }
 
 void resetVisited(char **map, int height, int width)
@@ -71,29 +104,20 @@ void resetVisited(char **map, int height, int width)
     }
 }
 
-point *neighbourPoints(point p)
-{
-    point *neighbouringPoints = (point *)malloc(4 * sizeof(point));
-    neighbouringPoints[0] = (point){p.x, p.y - 1}; // North
-    neighbouringPoints[1] = (point){p.x, p.y + 1}; // South
-    neighbouringPoints[2] = (point){p.x + 1, p.y}; // West
-    neighbouringPoints[3] = (point){p.x - 1, p.y}; // East
-    return neighbouringPoints;
-}
-
 void generateObstacles(char **map, int width, int height, int howMany)
 {
     point *points = generateRandomPoints(width, height, howMany);
-    int *obsLengths = generateRandomNumbers(howMany, 1, 4);
     bool horizontal = false;
     for (int i = 0; i < howMany; i++)
     {
+        point p = randomEmptyPointOnMap(map, 'o', width, height);
+        int obsLength = randomNumber(1, 4);
         horizontal = randomNumber(0, 1);
-        for (int j = 0; j < obsLengths[i]; j++)
+        for (int j = 0; j < obsLength; j++)
         {
-            if ((points[i].x + j >= width - 2 && horizontal) || (points[i].y + j >= height - 2 && !horizontal))
+            if ((p.x + j >= width - 2 && horizontal) || (p.y + j >= height - 2 && !horizontal))
                 break;
-            map[points[i].y + (horizontal ? 0 : j)][points[i].x + (horizontal ? j : 0)] = 'b';
+            map[p.y + (horizontal ? 0 : j)][p.x + (horizontal ? j : 0)] = 'b';
         }
     }
 }
