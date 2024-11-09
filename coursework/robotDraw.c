@@ -27,15 +27,17 @@ point squareCenter(robot *robot, map *map)
     return centre;
 }
 
-void getNorthCoords(robot *robot, map *map, shapeCoords *coords, point centre)
+shapeCoords getNorthCoords(robot *robot, map *map, point centre)
 {
+    shapeCoords northCoords;
     int squareSize = map->canvas.squareSize;
-    coords->x[0] = centre.x - squareSize / 2;
-    coords->x[1] = centre.x + squareSize / 2;
-    coords->x[2] = centre.x;
-    coords->y[0] = centre.y + squareSize / 2;
-    coords->y[1] = centre.y + squareSize / 2;
-    coords->y[2] = centre.y - squareSize / 2;
+    northCoords.x[0] = centre.x - squareSize / 2;
+    northCoords.x[1] = centre.x + squareSize / 2;
+    northCoords.x[2] = centre.x;
+    northCoords.y[0] = centre.y + squareSize / 2;
+    northCoords.y[1] = centre.y + squareSize / 2;
+    northCoords.y[2] = centre.y - squareSize / 2;
+    return northCoords;
 }
 
 void rotateShapeCoords(shapeCoords *coords, point center, double angle)
@@ -51,10 +53,8 @@ void rotateShapeCoords(shapeCoords *coords, point center, double angle)
 
 shapeCoords getShapeCoords(robot *robot, map *map)
 {
-    shapeCoords finalCoords;
     point centre = squareCenter(robot, map);
-
-    getNorthCoords(robot, map, &finalCoords, centre);
+    shapeCoords finalCoords = getNorthCoords(robot, map, centre);
     rotateShapeCoords(&finalCoords, centre, convertDirToAngle(robot->dir));
     return finalCoords;
 }
