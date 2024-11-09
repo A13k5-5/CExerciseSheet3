@@ -16,15 +16,6 @@ void printMap(char **map, int width, int height)
     }
 }
 
-void printArr(int *arr, int size)
-{
-    for (int i = 0; i < size; i++)
-    {
-        printf("%i ", arr[i]);
-    }
-    printf("\n");
-}
-
 point *neighbourPoints(point p)
 {
     point *neighbouringPoints = (point *)malloc(4 * sizeof(point));
@@ -60,19 +51,19 @@ void generateIrregularArena(char **map, int width, int height, point curPos, int
     }
     map[curPos.y][curPos.x] = 'w';
 
-    point *directions = neighbourPoints(curPos);
+    point *neighbouringPoints = neighbourPoints(curPos);
 
     for (int i = 0; i < 4; i++)
     {
         if ((randomNumber(0, 2) == 0 && depth < 8) || !depth)
         {
-            generateIrregularArena(map, width, height, directions[i], depth + 1);
+            generateIrregularArena(map, width, height, neighbouringPoints[i], depth + 1);
         }
     }
+    free(neighbouringPoints);
 }
 
-// generates wall around edges
-void generateWall(char **map, int width, int height)
+void generateEdgeWall(char **map, int width, int height)
 {
     for (int i = 0; i < height; i++)
     {
@@ -84,6 +75,12 @@ void generateWall(char **map, int width, int height)
             }
         }
     }
+}
+
+// generates wall around edges
+void generateWall(char **map, int width, int height)
+{
+    generateEdgeWall(map, width, height);
     point start = {1, 1};
     generateIrregularArena(map, width, height, start, 0);
     point start2 = {width - 2, 1};
@@ -106,12 +103,13 @@ void resetVisited(char **map, int height, int width)
 
 void generateObstacles(char **map, int width, int height, int howMany)
 {
-    point *points = generateRandomPoints(width, height, howMany);
-    bool horizontal = false;
+    bool horizontal;
+    point p;
+    int obsLength;
     for (int i = 0; i < howMany; i++)
     {
-        point p = randomEmptyPointOnMap(map, 'o', width, height);
-        int obsLength = randomNumber(1, 4);
+        p = randomEmptyPointOnMap(map, 'o', width, height);
+        obsLength = randomNumber(1, 4);
         horizontal = randomNumber(0, 1);
         for (int j = 0; j < obsLength; j++)
         {
@@ -158,20 +156,21 @@ void pointsAccessibleFromPoint(char **mapCopy, int *availableSpots, point curPos
     {
         pointsAccessibleFromPoint(mapCopy, availableSpots, neighbouringPoints[i]);
     }
+    free(neighbouringPoints);
 }
 
-point findSuitableHome(char ***map, int width, int height, int *availableSpots)
+point findSuitableHome(char ***map, int width, int height)
 {
     point p;
     char **mapCopy;
-    int minEmptySquares = 5;
-    while (*availableSpots < minEmptySquares)
+    int minEmptySquares = 5, availableSpots = 0;
+    while (availableSpots < minEmptySquares)
     {
-        *availableSpots = 0;
+        availableSpots = 0;
         p = randomEmptyPointOnMap(*map, 'o', width, height);
         mapCopy = copyMap(*map, width, height);
-        pointsAccessibleFromPoint(mapCopy, availableSpots, p);
-        if (*availableSpots >= minEmptySquares)
+        pointsAccessibleFromPoint(mapCopy, &availableSpots, p);
+        if (availableSpots >= minEmptySquares)
         {
             *map = copyMap(mapCopy, width, height);
         }
@@ -179,13 +178,10 @@ point findSuitableHome(char ***map, int width, int height, int *availableSpots)
     return p;
 }
 
-point setHome(char ***map, int width, int height)
+void setHome(char ***map, int width, int height)
 {
-    int availableSpots = 0;
-    point home = findSuitableHome(map, width, height, &availableSpots);
+    point home = findSuitableHome(map, width, height);
     (*map)[home.y][home.x] = 'h';
-    availableSpots--;
-    return home;
 }
 
 char **generateMap(int width, int height)
@@ -193,7 +189,7 @@ char **generateMap(int width, int height)
     char **map = generateEmptyMap(width, height);
     generateWall(map, width, height);
     generateObstacles(map, width, height, (height + width) / 2);
-    point home = setHome(&map, width, height);
+    setHome(&map, width, height);
     generateMarkers((height + width) / 4, map, width, height);
     return map;
 }
