@@ -36,9 +36,9 @@ void moveTo(robot *robot, point newPos, map *map)
 }
 
 // This function will later be used to free all allocated memory
-void end()
+void end(robot *robot)
 {
-    exit(0);
+    robot->isFinished = true;
 }
 
 void getHome(robot *robot, map *map)
@@ -47,7 +47,7 @@ void getHome(robot *robot, map *map)
     {
         dropMarker(robot, map);
     }
-    end();
+    end(robot);
 }
 
 void setVisited(char **mapCopy, point visitedPoint)
@@ -69,7 +69,7 @@ void checkPos(robot *robot, map *map, char lookingFor)
 
 void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *robot, char lookingFor)
 {
-    if (mapCopy[curPos.y][curPos.x] == WALL || mapCopy[curPos.y][curPos.x] == OBSTACLE || mapCopy[curPos.y][curPos.x] == VISITED)
+    if (mapCopy[curPos.y][curPos.x] == WALL || mapCopy[curPos.y][curPos.x] == OBSTACLE || mapCopy[curPos.y][curPos.x] == VISITED || robot->isFinished)
     {
         return;
     }
@@ -83,6 +83,7 @@ void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *rob
         movingEverywhereRecurAbs(map, mapCopy, neighbouringPoints[i], robot, lookingFor);
         moveTo(robot, curPos, map);
     }
+    free(neighbouringPoints);
 }
 
 int main(void)
@@ -101,7 +102,7 @@ int main(void)
     // Starting position can only be a position that can access home
     point startingPos = randomEmptyPointOnMap(map.map, VISITED, width, height);
     resetVisited(map.map, height, width);
-    robot robot = {startingPos, randomDir(), 0};
+    robot robot = {startingPos, randomDir(), 0, false};
 
     drawBackground(&map);
     char **mapCopy = copyMap(map.map, map.width, map.height);
