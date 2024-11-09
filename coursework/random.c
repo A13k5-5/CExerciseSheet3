@@ -1,4 +1,4 @@
-// This file contains the random function
+// Random utils functions
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>

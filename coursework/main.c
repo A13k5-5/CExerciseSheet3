@@ -136,6 +136,11 @@ void getHome(robot *robot, map *map)
     end();
 }
 
+void setVisited(char **mapCopy, point visitedPoint)
+{
+    mapCopy[visitedPoint.y][visitedPoint.x] = 'v';
+}
+
 void checkPos(robot *robot, map *map, char lookingFor)
 {
     if (lookingFor == 'm' && atMarker(robot, map))
@@ -154,7 +159,7 @@ void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *rob
     {
         return;
     }
-    mapCopy[curPos.y][curPos.x] = 'v';
+    setVisited(mapCopy, curPos);
     moveTo(robot, curPos, map);
     checkPos(robot, map, lookingFor);
 
@@ -179,7 +184,9 @@ int main(void)
         height,
         canvas,
         generateMap(width, height)};
-    point startingPos = randomEmptyPointOnMap(map.map, 'o', width, height);
+    // Starting position can only be a position that can access home
+    point startingPos = randomEmptyPointOnMap(map.map, 'v', width, height);
+    resetVisited(map.map, height, width);
     robot robot = {startingPos, randomDir(), 0};
 
     drawBackground(&map);
@@ -187,6 +194,5 @@ int main(void)
     movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, 'm');
     mapCopy = copyMap(map.map, map.width, map.height);
     movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, 'h');
-    free(map.map);
     return 0;
 }

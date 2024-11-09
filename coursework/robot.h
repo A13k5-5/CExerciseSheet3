@@ -10,7 +10,7 @@ enum dirs
     EAST = 3
 };
 
-typedef struct robot
+typedef struct
 {
     point pos;
     enum dirs dir;

@@ -1,68 +1,62 @@
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include "robotDraw.h"
 #include "background.h"
 #include "main.h"
 #include "robot.h"
 #include "graphics.h"
 
-void getNorthCoords(robot *robot, map *map, shapeCoords *coords)
+double convertDirToAngle(enum dirs dir)
 {
-    coords->x[0] = gridToCoords(map, robot->pos.x);
-    coords->x[1] = gridToCoords(map, robot->pos.x + 1);
-    coords->x[2] = (gridToCoords(map, robot->pos.x) + gridToCoords(map, robot->pos.x + 1)) / 2;
-    coords->y[0] = gridToCoords(map, robot->pos.y + 1);
-    coords->y[1] = gridToCoords(map, robot->pos.y + 1);
-    coords->y[2] = gridToCoords(map, robot->pos.y);
+    switch (dir)
+    {
+    case NORTH:
+        return 0;
+    case EAST:
+        return M_PI_2;
+    case SOUTH:
+        return M_PI;
+    case WEST:
+        return 3 * M_PI_2;
+    }
 }
 
-void getSouthCoords(robot *robot, map *map, shapeCoords *coords)
+point squareCenter(robot *robot, map *map)
 {
-    coords->x[0] = gridToCoords(map, robot->pos.x);
-    coords->x[1] = gridToCoords(map, robot->pos.x + 1);
-    coords->x[2] = (gridToCoords(map, robot->pos.x) + gridToCoords(map, robot->pos.x + 1)) / 2;
-    coords->y[0] = gridToCoords(map, robot->pos.y);
-    coords->y[1] = gridToCoords(map, robot->pos.y);
-    coords->y[2] = gridToCoords(map, robot->pos.y + 1);
+    point centre = {gridToCoords(map, robot->pos.x) + map->canvas.squareSize / 2, gridToCoords(map, robot->pos.y) + map->canvas.squareSize / 2};
+    return centre;
 }
 
-void getEastCoords(robot *robot, map *map, shapeCoords *coords)
+void getNorthCoords(robot *robot, map *map, shapeCoords *coords, point centre)
 {
-    coords->x[0] = gridToCoords(map, robot->pos.x);
-    coords->x[1] = gridToCoords(map, robot->pos.x);
-    coords->x[2] = gridToCoords(map, robot->pos.x + 1);
-    coords->y[0] = gridToCoords(map, robot->pos.y);
-    coords->y[1] = gridToCoords(map, robot->pos.y + 1);
-    coords->y[2] = (gridToCoords(map, robot->pos.y) + gridToCoords(map, robot->pos.y + 1)) / 2;
+    int squareSize = map->canvas.squareSize;
+    coords->x[0] = centre.x - squareSize / 2;
+    coords->x[1] = centre.x + squareSize / 2;
+    coords->x[2] = centre.x;
+    coords->y[0] = centre.y + squareSize / 2;
+    coords->y[1] = centre.y + squareSize / 2;
+    coords->y[2] = centre.y - squareSize / 2;
 }
 
-void getWestCoords(robot *robot, map *map, shapeCoords *coords)
+void rotateShapeCoords(shapeCoords *coords, point center, double angle)
 {
-    coords->x[0] = gridToCoords(map, robot->pos.x + 1);
-    coords->x[1] = gridToCoords(map, robot->pos.x + 1);
-    coords->x[2] = gridToCoords(map, robot->pos.x);
-    coords->y[0] = gridToCoords(map, robot->pos.y);
-    coords->y[1] = gridToCoords(map, robot->pos.y + 1);
-    coords->y[2] = (gridToCoords(map, robot->pos.y) + gridToCoords(map, robot->pos.y + 1)) / 2;
+    for (int i = 0; i < 3; i++)
+    {
+        int x = coords->x[i] - center.x;
+        int y = coords->y[i] - center.y;
+        coords->x[i] = center.x + (x * cos(angle) - y * sin(angle));
+        coords->y[i] = center.y + (x * sin(angle) + y * cos(angle));
+    }
 }
 
 shapeCoords getShapeCoords(robot *robot, map *map)
 {
-    shapeCoords coords;
-    switch (robot->dir)
-    {
-    case NORTH:
-        getNorthCoords(robot, map, &coords);
-        break;
-    case SOUTH:
-        getSouthCoords(robot, map, &coords);
-        break;
-    case WEST:
-        getWestCoords(robot, map, &coords);
-        break;
-    case EAST:
-        getEastCoords(robot, map, &coords);
-        break;
-    }
-    return coords;
+    shapeCoords finalCoords;
+    point centre = squareCenter(robot, map);
+
+    getNorthCoords(robot, map, &finalCoords, centre);
+    rotateShapeCoords(&finalCoords, centre, convertDirToAngle(robot->dir));
+    return finalCoords;
 }
 
 void drawRobot(robot *robot, map *map)

@@ -1,22 +1,20 @@
 #pragma once
-typedef struct canvas
+typedef struct
 {
     int width;
     int height;
     int squareSize;
     int offset;
 } canvas;
-typedef struct point
+typedef struct
 {
     int x;
     int y;
 } point;
-typedef struct map
+typedef struct
 {
     int width;
     int height;
     canvas canvas;
     char **map;
 } map;
-
-void printMap(char **map, int width, int height);

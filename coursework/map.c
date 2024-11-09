@@ -120,7 +120,7 @@ char **copyMap(char **map, int width, int height)
     return mapCopy;
 }
 
-void dfs(char **mapCopy, int *availableSpots, point curPos)
+void pointsAccessibleFromPoint(char **mapCopy, int *availableSpots, point curPos)
 {
     if (mapCopy[curPos.y][curPos.x] != 'o')
     {
@@ -132,7 +132,7 @@ void dfs(char **mapCopy, int *availableSpots, point curPos)
     point *neighbouringPoints = neighbourPoints(curPos);
     for (int i = 0; i < 4; i++)
     {
-        dfs(mapCopy, availableSpots, neighbouringPoints[i]);
+        pointsAccessibleFromPoint(mapCopy, availableSpots, neighbouringPoints[i]);
     }
 }
 
@@ -146,7 +146,7 @@ point findSuitableHome(char ***map, int width, int height, int *availableSpots)
         *availableSpots = 0;
         p = randomEmptyPointOnMap(*map, 'o', width, height);
         mapCopy = copyMap(*map, width, height);
-        dfs(mapCopy, availableSpots, p);
+        pointsAccessibleFromPoint(mapCopy, availableSpots, p);
         if (*availableSpots >= minEmptySquares)
         {
             *map = copyMap(mapCopy, width, height);
@@ -155,11 +155,12 @@ point findSuitableHome(char ***map, int width, int height, int *availableSpots)
     return p;
 }
 
-point setHome(char ***map, int width, int height, int *availableSpots)
+point setHome(char ***map, int width, int height)
 {
-    point home = findSuitableHome(map, width, height, availableSpots);
+    int availableSpots = 0;
+    point home = findSuitableHome(map, width, height, &availableSpots);
     (*map)[home.y][home.x] = 'h';
-    (*availableSpots)--;
+    availableSpots--;
     return home;
 }
 
@@ -167,11 +168,8 @@ char **generateMap(int width, int height)
 {
     char **map = generateEmptyMap(width, height);
     generateWall(map, width, height);
-    generateObstacles(map, width, height, (height + width) / 4);
-    int availableSpots = 0;
-    point home = setHome(&map, width, height, &availableSpots);
+    generateObstacles(map, width, height, (height + width) / 2);
+    point home = setHome(&map, width, height);
     generateMarkers((height + width) / 4, map, width, height);
-    resetVisited(map, height, width);
-    printMap(map, width, height);
     return map;
 }

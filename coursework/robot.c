@@ -48,12 +48,11 @@ void right(robot *robot)
 
 void pickUpMarker(robot *robot, map *map)
 {
-    if (atMarker(robot, map))
-    {
-        robot->numMarkersCaried++;
-        map->map[robot->pos.y][robot->pos.x] = 'o';
-        drawBackground(map);
-    }
+    if (!atMarker(robot, map))
+        return;
+    robot->numMarkersCaried++;
+    map->map[robot->pos.y][robot->pos.x] = 'o';
+    drawBackground(map);
 }
 
 void dropMarker(robot *robot, map *map)

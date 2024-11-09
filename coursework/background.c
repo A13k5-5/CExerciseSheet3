@@ -3,7 +3,6 @@
 #include "main.h"
 #include <stdio.h>
 
-// This function converts real (x,y) coords into grid coords
 int coordsToGrid(map *map, int x)
 {
     return (x - map->canvas.offset) / map->canvas.squareSize;
