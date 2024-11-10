@@ -32,30 +32,10 @@ enum dirs randomDir()
     return directions[randomNumber(0, 3)];
 }
 
-int *generateRandomNumbers(int size, int min, int max)
-{
-    int *arr = (int *)malloc(size * sizeof(int));
-    for (int i = 0; i < size; i++)
-    {
-        arr[i] = randomNumber(min, max);
-    }
-    return arr;
-}
-
 point generateRandomPoint(int width, int height)
 {
     point p = {randomNumber(1, width - 2), randomNumber(1, height - 2)};
     return p;
-}
-
-point *generateRandomPoints(int width, int height, int howMany)
-{
-    point *points = malloc(howMany * sizeof(point));
-    for (int i = 0; i < howMany; i++)
-    {
-        points[i] = generateRandomPoint(width, height);
-    }
-    return points;
 }
 
 point randomEmptyPointOnMap(char **map, char empty, int width, int height)

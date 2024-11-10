@@ -5,18 +5,6 @@
 #include "map.h"
 #include "random.h"
 
-void printMap(char **map, int width, int height)
-{
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
-            printf("%c ", map[i][j]);
-        }
-        printf("\n");
-    }
-}
-
 point *neighbourPoints(point p)
 {
     point *neighbouringPoints = (point *)malloc(4 * sizeof(point));
