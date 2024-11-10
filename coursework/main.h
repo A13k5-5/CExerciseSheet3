@@ -2,8 +2,8 @@
 
 #define SQUARE_SIZE 50
 #define OFFSET 50
-#define MIN_HEIGHT_AND_WIDTH 8
-#define MAX_HEIGHT_AND_WIDTH 14
+#define MIN_HEIGHT_AND_WIDTH 10
+#define MAX_HEIGHT_AND_WIDTH 16
 
 typedef struct
 {

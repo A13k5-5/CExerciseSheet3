@@ -12,7 +12,7 @@ int randomNumber(int min_num, int max_num)
 {
     int result = 0, low_num = 0, hi_num = 0;
 
-    if (min_num < max_num)
+    if (min_num <= max_num)
     {
         low_num = min_num;
         hi_num = max_num + 1; // include max_num in output

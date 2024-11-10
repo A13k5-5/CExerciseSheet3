@@ -159,14 +159,14 @@ point findSuitableHome(char ***map, int width, int height)
     {
         counter++;
         availableSpots = 0;
-        p = randomEmptyPointOnMap(*map, EMPTY, width, height);
+        point a = randomEmptyPointOnMap(*map, EMPTY, width, height);
         mapCopy = copyMap(*map, width, height);
-
-        pointsAccessibleFromPoint(mapCopy, &availableSpots, p);
+        pointsAccessibleFromPoint(mapCopy, &availableSpots, a);
         if (availableSpots >= minEmptySquares)
         {
             freeMap(*map, width, height);
             *map = copyMap(mapCopy, width, height);
+            p = a;
         }
         freeMap(mapCopy, width, height);
     }
@@ -178,7 +178,9 @@ bool setHome(char ***map, int width, int height)
 {
     point home = findSuitableHome(map, width, height);
     if (home.x == INVALID_POINT.x)
+    {
         return false;
+    }
     (*map)[home.y][home.x] = HOME;
     return true;
 }
@@ -213,6 +215,6 @@ char **generateMap(int width, int height)
         generateArenaAndHome(&map, &isValid, width, height);
     }
     int numMarkers = (height + width) / 4;
-    generateMarkers((height + width) / 4, map, width, height);
+    generateMarkers(numMarkers, map, width, height);
     return map;
 }

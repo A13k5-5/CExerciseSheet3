@@ -8,7 +8,7 @@
 #define VISITED 'v'
 
 #define MIN_OBSTALCE_LEN 1
-#define MAX_OBSTALCE_LEN 4
+#define MAX_OBSTALCE_LEN 3
 
 #define INVALID_POINT \
     (point) { -1, -1 }
