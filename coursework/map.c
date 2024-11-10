@@ -5,6 +5,7 @@
 #include "main.h"
 #include "map.h"
 #include "random.h"
+#include "control.h"
 
 char **generateEmptyMap(int width, int height)
 {
@@ -176,7 +177,7 @@ point findSuitableHome(char ***map, int width, int height)
 bool setHome(char ***map, int width, int height)
 {
     point home = findSuitableHome(map, width, height);
-    if (home.x == -1)
+    if (home.x == INVALID_POINT.x)
         return false;
     (*map)[home.y][home.x] = HOME;
     return true;
@@ -191,7 +192,7 @@ void generateMarkers(int howMany, char **map, int width, int height)
     }
 }
 
-void generateArena(char ***map, bool *isValid, int width, int height)
+void generateArenaAndHome(char ***map, bool *isValid, int width, int height)
 {
     *map = generateEmptyMap(width, height);
     generateWall(*map, width, height);
@@ -209,7 +210,7 @@ char **generateMap(int width, int height)
     bool isValid = false;
     while (!isValid)
     {
-        generateArena(&map, &isValid, width, height);
+        generateArenaAndHome(&map, &isValid, width, height);
     }
     int numMarkers = (height + width) / 4;
     generateMarkers((height + width) / 4, map, width, height);

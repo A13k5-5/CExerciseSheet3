@@ -5,7 +5,7 @@
 #define MARKER_COLOUR gray
 #define OBSTACLE_COLOUR black
 #define HOME_COLOUR blue
-#define EMPTY_COLOUR black
+#define GRID_COLOUR black
 
 int coordsToGrid(map *map, int x);
 int coordsToGrid(map *map, int x);

@@ -6,6 +6,7 @@
 #include "main.h"
 #include "robot.h"
 #include "graphics.h"
+#include "control.h"
 
 double convertDirToAngle(enum dirs dir)
 {
@@ -66,6 +67,6 @@ void drawRobot(robot *robot, map *map)
     shapeCoords coords = getShapeCoords(robot, map);
     setColour(ROBOT_COLOUR);
     fillPolygon(3, coords.x, coords.y);
-    setColour(EMPTY_COLOUR);
+    setColour(GRID_COLOUR);
     sleep(ROBOT_SLEEP_TIME);
 }

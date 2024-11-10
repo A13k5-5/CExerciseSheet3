@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "background.h"
 #include "main.h"
 #include "graphics.h"
 #include "map.h"
+#include "control.h"
 
 int coordsToGrid(map *map, int x)
 {
@@ -27,7 +29,7 @@ colour squareColour(char square)
     case MARKER:
         return MARKER_COLOUR;
     default:
-        return EMPTY_COLOUR;
+        return GRID_COLOUR;
     }
 }
 
@@ -40,7 +42,7 @@ void drawGridSquares(map *map, int x, int y)
     {
         fillRect(gridToCoords(map, x), gridToCoords(map, y), SQUARE_SIZE, SQUARE_SIZE);
     }
-    setColour(EMPTY_COLOUR);
+    setColour(GRID_COLOUR);
     drawRect(gridToCoords(map, x), gridToCoords(map, y), SQUARE_SIZE, SQUARE_SIZE);
 }
 
