@@ -6,12 +6,12 @@
 
 int coordsToGrid(map *map, int x)
 {
-    return (x - map->canvas.offset) / map->canvas.squareSize;
+    return (x - OFFSET) / SQUARE_SIZE;
 }
 
 int gridToCoords(map *map, int x)
 {
-    return x * map->canvas.squareSize + map->canvas.offset;
+    return x * SQUARE_SIZE + OFFSET;
 }
 
 colour squareColour(char square)
@@ -33,15 +33,15 @@ colour squareColour(char square)
 
 void drawGridSquares(map *map, int x, int y)
 {
-    drawRect(gridToCoords(map, x), gridToCoords(map, y), map->canvas.squareSize, map->canvas.squareSize);
+    drawRect(gridToCoords(map, x), gridToCoords(map, y), SQUARE_SIZE, SQUARE_SIZE);
     colour col = squareColour(map->map[y][x]);
     setColour(col);
     if (map->map[y][x] != EMPTY)
     {
-        fillRect(gridToCoords(map, x), gridToCoords(map, y), map->canvas.squareSize, map->canvas.squareSize);
+        fillRect(gridToCoords(map, x), gridToCoords(map, y), SQUARE_SIZE, SQUARE_SIZE);
     }
     setColour(EMPTY_COLOUR);
-    drawRect(gridToCoords(map, x), gridToCoords(map, y), map->canvas.squareSize, map->canvas.squareSize);
+    drawRect(gridToCoords(map, x), gridToCoords(map, y), SQUARE_SIZE, SQUARE_SIZE);
 }
 
 void drawBackground(map *map)

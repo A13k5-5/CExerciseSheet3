@@ -24,20 +24,19 @@ double convertDirToAngle(enum dirs dir)
 
 point squareCentre(robot *robot, map *map)
 {
-    point centre = {gridToCoords(map, robot->pos.x) + map->canvas.squareSize / 2, gridToCoords(map, robot->pos.y) + map->canvas.squareSize / 2};
+    point centre = {gridToCoords(map, robot->pos.x) + SQUARE_SIZE / 2, gridToCoords(map, robot->pos.y) + SQUARE_SIZE / 2};
     return centre;
 }
 
 shapeCoords getNorthCoords(robot *robot, map *map, point centre)
 {
     shapeCoords northCoords;
-    int squareSize = map->canvas.squareSize;
-    northCoords.x[0] = centre.x - squareSize / 2;
-    northCoords.x[1] = centre.x + squareSize / 2;
+    northCoords.x[0] = centre.x - SQUARE_SIZE / 2;
+    northCoords.x[1] = centre.x + SQUARE_SIZE / 2;
     northCoords.x[2] = centre.x;
-    northCoords.y[0] = centre.y + squareSize / 2;
-    northCoords.y[1] = centre.y + squareSize / 2;
-    northCoords.y[2] = centre.y - squareSize / 2;
+    northCoords.y[0] = centre.y + SQUARE_SIZE / 2;
+    northCoords.y[1] = centre.y + SQUARE_SIZE / 2;
+    northCoords.y[2] = centre.y - SQUARE_SIZE / 2;
     return northCoords;
 }
 

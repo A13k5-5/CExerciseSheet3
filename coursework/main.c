@@ -79,6 +79,7 @@ void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *rob
     for (int i = 0; i < 4; i++)
     {
         movingEverywhereRecurAbs(map, mapCopy, neighbouringPoints[i], robot, lookingFor);
+        // As the recursion unwinds, move back
         moveTo(robot, curPos, map);
     }
     free(neighbouringPoints);
@@ -88,8 +89,6 @@ void initializeCanvas(canvas *canvas, int width, int height)
 {
     canvas->width = width * SQUARE_SIZE + 2 * OFFSET;
     canvas->height = height * SQUARE_SIZE + 2 * OFFSET;
-    canvas->squareSize = SQUARE_SIZE;
-    canvas->offset = OFFSET;
 }
 
 map initializeMap(int width, int height)
