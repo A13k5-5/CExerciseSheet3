@@ -32,7 +32,6 @@ void moveTo(robot *robot, point newPos, map *map)
     newDir = dy ? (dy < 0 ? NORTH : SOUTH) : newDir;
     turnToDir(robot, newDir);
     forward(robot, map);
-    drawRobot(robot, map);
 }
 
 void setVisited(char **mapCopy, point visitedPoint)
@@ -120,7 +119,7 @@ void exploreMap(map *map, robot *robot, char lookingFor)
     freeMap(mapCopy, map->width, map->height);
 }
 
-int main(void)
+void run()
 {
     srand(time(NULL));
     int width = randomNumber(MIN_HEIGHT_AND_WIDTH, MAX_HEIGHT_AND_WIDTH);
@@ -135,5 +134,10 @@ int main(void)
     exploreMap(&map, &robot, HOME);
 
     freeMap(map.map, map.width, map.height);
+}
+
+int main(void)
+{
+    run();
     return 0;
 }

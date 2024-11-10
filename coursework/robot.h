@@ -1,6 +1,5 @@
 #pragma once
 #include "main.h"
-#include <stdbool.h>
 // Everytime there is a change in direction, either 2 is added or substracted
 // Thanks so this north and south, and west and east have opposite signs
 enum dirs

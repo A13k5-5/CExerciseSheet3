@@ -48,6 +48,7 @@ void drawBackground(map *map)
 {
     setWindowSize(map->canvas.width, map->canvas.height);
     background();
+    clear();
     for (int y = 0; y < map->height; y++)
     {
         for (int x = 0; x < map->width; x++)

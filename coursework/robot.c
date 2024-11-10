@@ -4,8 +4,6 @@
 #include <stdbool.h>
 #include "robot.h"
 #include "background.h"
-#include "graphics.h"
-#include "random.h"
 #include "robotDraw.h"
 #include "map.h"
 
