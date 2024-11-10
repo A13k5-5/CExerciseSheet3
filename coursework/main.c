@@ -85,16 +85,14 @@ void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *rob
     free(neighbouringPoints);
 }
 
-void initializeCanvas(canvas *canvas, int width, int height)
+canvas initializeCanvas(int width, int height)
 {
-    canvas->width = width * SQUARE_SIZE + 2 * OFFSET;
-    canvas->height = height * SQUARE_SIZE + 2 * OFFSET;
+    return (canvas){width * SQUARE_SIZE + 2 * OFFSET, height * SQUARE_SIZE + 2 * OFFSET};
 }
 
 map initializeMap(int width, int height)
 {
-    canvas canvas;
-    initializeCanvas(&canvas, width, height);
+    canvas canvas = initializeCanvas(width, height);
     map map = {
         width,
         height,
@@ -105,6 +103,7 @@ map initializeMap(int width, int height)
 
 robot initializeRobot(map *map)
 {
+    // initializeMap left all points that can access all markers and home as VISITED
     point startingPos = randomEmptyPointOnMap(map->map, VISITED, map->width, map->height);
     resetVisited(map->map, map->height, map->width);
     robot robot = {startingPos, randomDir(), 0, false};

@@ -7,7 +7,7 @@
 
 typedef struct
 {
-    // Real width and height in px
+    // Width and height in px
     int width;
     int height;
 } canvas;

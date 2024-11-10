@@ -83,7 +83,7 @@ void generateEdgeWall(char **map, int width, int height)
     }
 }
 
-void generateIrregularWall(char **map, int width, int height, point curPos, int depth)
+void generateIrregularWall(char **map, int width, int height, point curPos, int depth, int maxDepth)
 {
     if (curPos.x < 0 || curPos.x >= width - 1 || curPos.y < 0 || curPos.y >= height - 1)
     {
@@ -94,9 +94,9 @@ void generateIrregularWall(char **map, int width, int height, point curPos, int 
 
     for (int i = 0; i < 4; i++)
     {
-        if ((randomNumber(0, 2) == 0 && depth < 8) || !depth)
+        if ((randomNumber(0, 2) == 0 && depth < maxDepth) || !depth)
         {
-            generateIrregularWall(map, width, height, neighbouringPoints[i], depth + 1);
+            generateIrregularWall(map, width, height, neighbouringPoints[i], depth + 1, maxDepth);
         }
     }
     free(neighbouringPoints);
@@ -105,10 +105,9 @@ void generateIrregularWall(char **map, int width, int height, point curPos, int 
 void generateWall(char **map, int width, int height)
 {
     generateEdgeWall(map, width, height);
-    point start = {1, 1};
-    generateIrregularWall(map, width, height, start, 0);
-    point start2 = {width - 2, 1};
-    generateIrregularWall(map, width, height, start2, 0);
+    int maxDepth = (height * width) / 10;
+    point upperLeftCorner = {1, 1};
+    generateIrregularWall(map, width, height, upperLeftCorner, 0, maxDepth);
 }
 
 void generateObstacle(char **map, int width, int height)
@@ -118,7 +117,7 @@ void generateObstacle(char **map, int width, int height)
     bool horizontal = randomNumber(false, true);
     for (int j = 0; j < obsLength; j++)
     {
-        if ((p.x + j >= width - 2 && horizontal) || (p.y + j >= height - 2 && !horizontal))
+        if ((p.x + j >= width - 2 && horizontal) || (p.y + j >= height - 2 && !horizontal) || map[p.y][p.x] == WALL)
             break;
         map[p.y + (horizontal ? 0 : j)][p.x + (horizontal ? j : 0)] = OBSTACLE;
     }
@@ -152,11 +151,12 @@ void pointsAccessibleFromPoint(char **mapCopy, int *availableSpots, point curPos
 
 point findSuitableHome(char ***map, int width, int height)
 {
-    point p;
+    point p = INVALID_POINT;
     char **mapCopy;
-    int minEmptySquares = 5, availableSpots = 0;
-    while (availableSpots < minEmptySquares)
+    int minEmptySquares = 5, availableSpots = 0, counter = 0;
+    while (availableSpots < minEmptySquares && counter < 10)
     {
+        counter++;
         availableSpots = 0;
         p = randomEmptyPointOnMap(*map, EMPTY, width, height);
         mapCopy = copyMap(*map, width, height);
@@ -172,10 +172,14 @@ point findSuitableHome(char ***map, int width, int height)
     return p;
 }
 
-void setHome(char ***map, int width, int height)
+// true if suitable home is found, false otherwise
+bool setHome(char ***map, int width, int height)
 {
     point home = findSuitableHome(map, width, height);
+    if (home.x == -1)
+        return false;
     (*map)[home.y][home.x] = HOME;
+    return true;
 }
 
 void generateMarkers(int howMany, char **map, int width, int height)
@@ -187,12 +191,27 @@ void generateMarkers(int howMany, char **map, int width, int height)
     }
 }
 
+void generateArena(char ***map, bool *isValid, int width, int height)
+{
+    *map = generateEmptyMap(width, height);
+    generateWall(*map, width, height);
+    int numObstacles = (height * width) / 10;
+    generateObstacles(*map, width, height, numObstacles);
+    *isValid = setHome(map, width, height);
+    if (!(*isValid))
+        freeMap(*map, width, height);
+}
+
+// Number of markers and obstacles based on the dimensions of the map
 char **generateMap(int width, int height)
 {
-    char **map = generateEmptyMap(width, height);
-    generateWall(map, width, height);
-    generateObstacles(map, width, height, (height + width) / 2);
-    setHome(&map, width, height);
+    char **map;
+    bool isValid = false;
+    while (!isValid)
+    {
+        generateArena(&map, &isValid, width, height);
+    }
+    int numMarkers = (height + width) / 4;
     generateMarkers((height + width) / 4, map, width, height);
     return map;
 }

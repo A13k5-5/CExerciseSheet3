@@ -10,6 +10,9 @@
 #define MIN_OBSTALCE_LEN 1
 #define MAX_OBSTALCE_LEN 4
 
+#define INVALID_POINT \
+    (point) { -1, -1 }
+
 void freeMap(char **map, int width, int height);
 char **generateMap(int width, int height);
 char **copyMap(char **map, int width, int height);
