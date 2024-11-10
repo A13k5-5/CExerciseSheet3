@@ -45,8 +45,8 @@ void exploreMap(map *map, robot *robot, char lookingFor)
 void run()
 {
     srand(time(NULL));
-    int width = randomNumber(MIN_HEIGHT_AND_WIDTH, MAX_HEIGHT_AND_WIDTH);
-    int height = randomNumber(MIN_HEIGHT_AND_WIDTH, MAX_HEIGHT_AND_WIDTH);
+    const int width = randomNumber(MIN_HEIGHT_AND_WIDTH, MAX_HEIGHT_AND_WIDTH);
+    const int height = randomNumber(MIN_HEIGHT_AND_WIDTH, MAX_HEIGHT_AND_WIDTH);
 
     map map = initializeMap(width, height);
     robot robot = initializeRobot(&map);
