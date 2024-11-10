@@ -67,5 +67,5 @@ void drawRobot(robot *robot, map *map)
     setColour(ROBOT_COLOUR);
     fillPolygon(3, coords.x, coords.y);
     setColour(EMPTY_COLOUR);
-    sleep(100);
+    sleep(ROBOT_SLEEP_TIME);
 }

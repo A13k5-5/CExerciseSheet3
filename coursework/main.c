@@ -35,6 +35,11 @@ void moveTo(robot *robot, point newPos, map *map)
     drawRobot(robot, map);
 }
 
+void setVisited(char **mapCopy, point visitedPoint)
+{
+    mapCopy[visitedPoint.y][visitedPoint.x] = VISITED;
+}
+
 void end(robot *robot)
 {
     robot->isFinished = true;
@@ -47,11 +52,6 @@ void getHome(robot *robot, map *map)
         dropMarker(robot, map);
     }
     end(robot);
-}
-
-void setVisited(char **mapCopy, point visitedPoint)
-{
-    mapCopy[visitedPoint.y][visitedPoint.x] = VISITED;
 }
 
 void checkPos(robot *robot, map *map, char lookingFor)
@@ -85,31 +85,55 @@ void movingEverywhereRecurAbs(map *map, char **mapCopy, point curPos, robot *rob
     free(neighbouringPoints);
 }
 
-int main(void)
+void initializeCanvas(canvas *canvas, int width, int height)
 {
-    srand(time(NULL));
-    int width = randomNumber(8, 14);
-    int height = randomNumber(8, 14);
-    int squareSize = 50;
-    int offset = 50;
-    canvas canvas = {width * squareSize + 2 * offset, height * squareSize + 2 * offset, squareSize, offset};
+    canvas->width = width * SQUARE_SIZE + 2 * OFFSET;
+    canvas->height = height * SQUARE_SIZE + 2 * OFFSET;
+    canvas->squareSize = SQUARE_SIZE;
+    canvas->offset = OFFSET;
+}
+
+map initializeMap(int width, int height)
+{
+    canvas canvas;
+    initializeCanvas(&canvas, width, height);
     map map = {
         width,
         height,
         canvas,
         generateMap(width, height)};
-    // Starting position can only be a position that can access home
-    point startingPos = randomEmptyPointOnMap(map.map, VISITED, width, height);
-    resetVisited(map.map, height, width);
+    return map;
+}
+
+robot initializeRobot(map *map)
+{
+    point startingPos = randomEmptyPointOnMap(map->map, VISITED, map->width, map->height);
+    resetVisited(map->map, map->height, map->width);
     robot robot = {startingPos, randomDir(), 0, false};
+    return robot;
+}
+
+void exploreMap(map *map, robot *robot, char lookingFor)
+{
+    char **mapCopy = copyMap(map->map, map->width, map->height);
+    movingEverywhereRecurAbs(map, mapCopy, robot->pos, robot, lookingFor);
+    freeMap(mapCopy, map->width, map->height);
+}
+
+int main(void)
+{
+    srand(time(NULL));
+    int width = randomNumber(MIN_HEIGHT_AND_WIDTH, MAX_HEIGHT_AND_WIDTH);
+    int height = randomNumber(MIN_HEIGHT_AND_WIDTH, MAX_HEIGHT_AND_WIDTH);
+
+    map map = initializeMap(width, height);
+    robot robot = initializeRobot(&map);
 
     drawBackground(&map);
-    char **mapCopy = copyMap(map.map, map.width, map.height);
-    movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, MARKER);
-    freeMap(mapCopy, width, height);
-    mapCopy = copyMap(map.map, map.width, map.height);
-    movingEverywhereRecurAbs(&map, mapCopy, startingPos, &robot, HOME);
-    freeMap(mapCopy, width, height);
-    freeMap(map.map, width, height);
+
+    exploreMap(&map, &robot, MARKER);
+    exploreMap(&map, &robot, HOME);
+
+    freeMap(map.map, map.width, map.height);
     return 0;
 }

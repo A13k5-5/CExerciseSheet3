@@ -131,15 +131,6 @@ void generateObstacles(char **map, int width, int height, int howMany)
     }
 }
 
-void generateMarkers(int howMany, char **map, int width, int height)
-{
-    for (int i = 0; i < howMany; i++)
-    {
-        point p = randomEmptyPointOnMap(map, VISITED, width, height);
-        map[p.y][p.x] = MARKER;
-    }
-}
-
 // Sets all accessible points to VISITED
 void pointsAccessibleFromPoint(char **mapCopy, int *availableSpots, point curPos)
 {
@@ -184,6 +175,15 @@ void setHome(char ***map, int width, int height)
 {
     point home = findSuitableHome(map, width, height);
     (*map)[home.y][home.x] = HOME;
+}
+
+void generateMarkers(int howMany, char **map, int width, int height)
+{
+    for (int i = 0; i < howMany; i++)
+    {
+        point p = randomEmptyPointOnMap(map, VISITED, width, height);
+        map[p.y][p.x] = MARKER;
+    }
 }
 
 char **generateMap(int width, int height)

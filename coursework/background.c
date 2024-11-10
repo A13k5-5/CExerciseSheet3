@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "background.h"
 #include "main.h"
+#include "graphics.h"
 #include "map.h"
 
 int coordsToGrid(map *map, int x)
