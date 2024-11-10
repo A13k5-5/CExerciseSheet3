@@ -32,7 +32,7 @@ enum dirs randomDir()
     return directions[randomNumber(0, 3)];
 }
 
-point generateRandomPoint(int width, int height)
+point randomPoint(int width, int height)
 {
     point p = {randomNumber(1, width - 2), randomNumber(1, height - 2)};
     return p;
@@ -40,11 +40,11 @@ point generateRandomPoint(int width, int height)
 
 point randomEmptyPointOnMap(char **map, char empty, int width, int height)
 {
-    bool isEmpty = false;
     point p;
+    bool isEmpty = false;
     while (!isEmpty)
     {
-        p = generateRandomPoint(width, height);
+        p = randomPoint(width, height);
         if (map[p.y][p.x] == empty)
         {
             isEmpty = true;

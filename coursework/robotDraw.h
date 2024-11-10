@@ -1,7 +1,9 @@
 #pragma once
 #include "main.h"
 #include "robot.h"
+#include "graphics.h"
 
+#define ROBOT_COLOUR green
 typedef struct
 {
     int x[3];

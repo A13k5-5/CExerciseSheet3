@@ -2,6 +2,7 @@
 #include "main.h"
 #include <stdbool.h>
 // Everytime there is a change in direction, either 2 is added or substracted
+// Thanks so this north and south, and west and east have opposite signs
 enum dirs
 {
     NORTH = -3,
@@ -9,6 +10,8 @@ enum dirs
     SOUTH = 1,
     EAST = 3
 };
+
+#define DIRECTION_CHANGE 2
 
 typedef struct
 {
@@ -23,7 +26,7 @@ void forward(robot *robot, map *map);
 void left(robot *robot);
 void right(robot *robot);
 int atMarker(robot *robot, map *map);
-bool canMoveForward(robot *robot, map *map);
+int canMoveForward(robot *robot, map *map);
 void pickUpMarker(robot *robot, map *map);
 int isAtHome(robot *robot, map *map);
 void dropMarker(robot *robot, map *map);

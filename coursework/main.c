@@ -1,5 +1,3 @@
-// This is the main controller
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -11,7 +9,6 @@
 #include "graphics.h"
 #include "map.h"
 
-// Stage 5 start
 void turnToDir(robot *robot, enum dirs newDir)
 {
     while (robot->dir != newDir)
@@ -38,7 +35,6 @@ void moveTo(robot *robot, point newPos, map *map)
     drawRobot(robot, map);
 }
 
-// This function will later be used to free all allocated memory
 void end(robot *robot)
 {
     robot->isFinished = true;

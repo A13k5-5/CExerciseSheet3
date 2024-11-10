@@ -48,7 +48,6 @@ void generateIrregularArena(char **map, int width, int height, point curPos, int
         return;
     }
     map[curPos.y][curPos.x] = WALL;
-
     point *neighbouringPoints = neighbourPoints(curPos);
 
     for (int i = 0; i < 4; i++)
@@ -75,7 +74,6 @@ void generateEdgeWall(char **map, int width, int height)
     }
 }
 
-// generates wall around edges
 void generateWall(char **map, int width, int height)
 {
     generateEdgeWall(map, width, height);

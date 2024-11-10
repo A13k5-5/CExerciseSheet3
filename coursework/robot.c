@@ -1,15 +1,15 @@
 // This file controls the robot
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 #include "robot.h"
 #include "background.h"
 #include "graphics.h"
 #include "random.h"
 #include "robotDraw.h"
 #include "map.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
 
-bool canMoveForward(robot *robot, map *map)
+int canMoveForward(robot *robot, map *map)
 {
     int sign = robot->dir / abs(robot->dir);
     bool vertical = robot->dir == NORTH || robot->dir == SOUTH;
@@ -39,12 +39,12 @@ void forward(robot *robot, map *map)
 
 void left(robot *robot)
 {
-    robot->dir = (robot->dir + 2) > EAST ? NORTH : (robot->dir + 2);
+    robot->dir = (robot->dir + DIRECTION_CHANGE) > EAST ? NORTH : (robot->dir + DIRECTION_CHANGE);
 }
 
 void right(robot *robot)
 {
-    robot->dir = (robot->dir - 2) < NORTH ? EAST : (robot->dir - 2);
+    robot->dir = (robot->dir - DIRECTION_CHANGE) < NORTH ? EAST : (robot->dir - DIRECTION_CHANGE);
 }
 
 void pickUpMarker(robot *robot, map *map)
