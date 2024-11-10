@@ -7,7 +7,9 @@
 #define OBSTACLE 'b'
 #define VISITED 'v'
 
-void printMap(char **map, int width, int height);
+#define MIN_OBSTALCE_LEN 1
+#define MAX_OBSTALCE_LEN 4
+
 void freeMap(char **map, int width, int height);
 char **generateMap(int width, int height);
 char **copyMap(char **map, int width, int height);
